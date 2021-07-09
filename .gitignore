@@ -58,9 +58,5 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
-/ProjectSettings
-/Packages
-/Assets/Scenes.meta
-/Assets/Scenes
 /UserSettings
 /.vsconfig
