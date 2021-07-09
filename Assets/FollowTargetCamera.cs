@@ -23,6 +23,7 @@ public class FollowTargetCamera : MonoBehaviour
         maxZ = -height / 2 + moveableArea.transform.position.z + moveableArea.center.z + moveableArea.size.z / 2;
     }
 
+    public float lerp = 0.05f;
     private void LateUpdate()
     {
         var newPos =  target.position - offset;
@@ -32,6 +33,6 @@ public class FollowTargetCamera : MonoBehaviour
         newPos.z = Mathf.Min(newPos.z, maxZ);
         newPos.z = Mathf.Max(newPos.z, minZ);
 
-        transform.position = newPos;
+        transform.position = Vector3.Lerp(transform.position, newPos, lerp);
     }
 }
