@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -15,6 +16,8 @@ public class Player : MonoBehaviour
     {
         animator = GetComponentInChildren<Animator>();
         spriteTr = GetComponentInChildren<SpriteRenderer>().transform;
+
+        attackInfoMap = attackInfos.ToDictionary(x => x.attackState);
     }
 
     void Update()
@@ -22,6 +25,69 @@ public class Player : MonoBehaviour
         Move();
 
         Jump();
+
+        Attack();
+    }
+
+    private void Attack()
+    {
+        // 마우스 클릭하면 공격
+        if(Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            ProcessAttack();
+        }
+
+        // 마우스 우클릭하면 점프
+
+        // 점프 중에 공격하면 공중 공격
+
+        // 점프중에 대시하면 대시 각도에 따라 점프앞대시공격, 점프 낙하대시공격
+
+        // 마우스 드래그 하면 대시 
+
+        // 대시 중에 공격하면 대시 공격
+    }
+
+    Coroutine attackHandle;
+    private void ProcessAttack()
+    {
+        if (attackHandle != null)
+            StopCoroutine(attackHandle);
+
+        AttackInfo previousAttack;
+        AttackInfo currentAttack;
+        attackInfoMap.TryGetValue(state, out previousAttack);
+
+        currentAttack = GetNextAttack(previousAttack);
+
+        attackHandle = StartCoroutine(AttackCo(currentAttack));
+    }
+
+    private AttackInfo GetNextAttack(AttackInfo previousAttack)
+    {
+        AttackInfo currentAttack;
+
+        if (previousAttack == null || attackInfoMap.TryGetValue(previousAttack.nextAttack, out currentAttack) == false)
+            currentAttack = attackInfoMap[StateType.Attack1];
+
+        return currentAttack;
+    }
+
+    [System.Serializable]
+    public class AttackInfo
+    {
+        public StateType attackState;
+        public float duration;
+        public int damage;
+        public StateType nextAttack;
+    }
+    public List<AttackInfo> attackInfos;
+    Dictionary<StateType, AttackInfo> attackInfoMap;
+    private IEnumerator AttackCo(AttackInfo currentAttack)
+    {
+        State = currentAttack.attackState;
+        yield return new WaitForSeconds(currentAttack.duration); // 공격이 끝날때까지 쉬자. 
+        State = StateType.Idle;
     }
 
     public AnimationCurve jumpYac;
@@ -44,10 +110,12 @@ public class Player : MonoBehaviour
         Idle,
         Walk,
         Jump,
-        Attack,
+        Attack1,
+        Attack2,
+        Attack3,
     }
 
-    StateType state = StateType.Idle;
+    [SerializeField] StateType state = StateType.Idle;
     StateType State
     {
         get { return state; }
@@ -89,6 +157,9 @@ public class Player : MonoBehaviour
         if (Time.timeScale == 0) // 타임 스케일이 0이라는건 디버깅을 위해서 스케일을 0으로 한경우이므로 애니메이션 업데이트 정지시킴
             return;
 
+        if (IsIngAttack())
+            return;
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (plane.Raycast(ray, out float enter))
@@ -124,5 +195,12 @@ public class Player : MonoBehaviour
                 State = StateType.Idle;
             }
         }
+    }
+
+    private bool IsIngAttack()
+    {
+        return State == StateType.Attack1
+            || State == StateType.Attack2
+            || State == StateType.Attack3;
     }
 }
