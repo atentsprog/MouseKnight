@@ -318,9 +318,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  state: 0
-  jumpYMultiply: 50
-  jumpTimeMultiply: 2
+  m_state: 0
+  jumpYMultiply: 35
+  jumpTimeMultiply: 0.8
 --- !u!195 &1671499760
 NavMeshAgent:
   m_ObjectHideFlags: 0

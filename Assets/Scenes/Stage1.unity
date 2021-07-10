@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1e72500bbc20ec498ea4bdd15d3b607, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1671499758}
+  target: {fileID: 396258206}
   offset: {x: 0, y: 0, z: 0}
   moveableArea: {fileID: 1477612391}
   minX: 0
@@ -227,6 +227,11 @@ MonoBehaviour:
   minZ: 0
   maxZ: 0
   lerp: 0.05
+--- !u!4 &396258206 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2593184395409606332, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
+  m_PrefabInstance: {fileID: 6231549770134350382}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &457408089
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,11 +689,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1671499758 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4848238699823408812, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
-  m_PrefabInstance: {fileID: 6231549770134350382}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1828341912
 GameObject:
   m_ObjectHideFlags: 0

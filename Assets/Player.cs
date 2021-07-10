@@ -110,7 +110,7 @@ public class Player : MonoBehaviour
 
         AttackInfo previousAttack;
         AttackInfo currentAttack;
-        attackInfoMap.TryGetValue(state, out previousAttack);
+        attackInfoMap.TryGetValue(m_state, out previousAttack);
 
         currentAttack = GetNextAttack(previousAttack);
 
@@ -163,22 +163,23 @@ public class Player : MonoBehaviour
     {
         Idle,
         Walk,
-        Jump,
+        JumpUp,
+        JumpDown,
         Attack1,
         Attack2,
         Attack3,
     }
 
-    [SerializeField] StateType state = StateType.Idle;
+    [SerializeField] StateType m_state = StateType.Idle;
     StateType State
     {
-        get { return state; }
+        get { return m_state; }
         set
         {
-            if (state == value)
+            if (m_state == value)
                 return;
-            state = value;
-            animator.Play(state.ToString());
+            m_state = value;
+            animator.Play(m_state.ToString());
         }
     }
     Animator animator;
@@ -188,17 +189,29 @@ public class Player : MonoBehaviour
     private IEnumerator JumpCo()
     {
         jumpState = JumpStateType.Jump;
-        State = StateType.Jump;
+        State = StateType.JumpUp;
         float jumpStartTime = Time.time;
         float jumpDuration = jumpYac[jumpYac.length - 1].time;
         jumpDuration *= jumpTimeMultiply;
         float jumpEndTime = jumpStartTime + jumpDuration;
         float sumEvaluateTime = 0;
+        float previousyHeight = 0;
         while (Time.time < jumpEndTime)
         {
             float y = jumpYac.Evaluate(sumEvaluateTime / jumpTimeMultiply);
             y *= jumpYMultiply;
-            transform.Translate(0, y, 0);
+            transform.Translate(0, y, 0); // 여기서움직여도 navMeshAgent때문에 0으로 간다. 그러므로 누적된 높이가 적용되는게 아니라 매번 땅에서 부터의 높이 설정이 된다)
+
+            if (State == StateType.JumpUp)
+            {
+                if(previousyHeight > y)
+                {
+                    State = StateType.JumpDown;
+                }
+                else
+                    previousyHeight = y;
+            }
+            
             yield return null;
             sumEvaluateTime += Time.deltaTime;
         }
@@ -222,7 +235,7 @@ public class Player : MonoBehaviour
             mousePointer.position = hitPoint;
             float distance = Vector3.Distance(hitPoint, transform.position);
 
-            float moveableDistance = state == StateType.Walk ? moveableStopDistance : moveableStartDistance;
+            float moveableDistance = m_state == StateType.Walk ? moveableStopDistance : moveableStartDistance;
 
             if (distance > moveableDistance)
             {

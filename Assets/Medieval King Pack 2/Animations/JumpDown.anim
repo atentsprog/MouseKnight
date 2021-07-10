@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Fall
+  m_Name: JumpDown
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -20,11 +20,9 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: -5966621866309598838, guid: 18c272d27b28a784083dec9dbfbfa466,
-        type: 3}
+      value: {fileID: -5966621866309598838, guid: 18c272d27b28a784083dec9dbfbfa466, type: 3}
     - time: 0.083333336
-      value: {fileID: -2069157278089061004, guid: 18c272d27b28a784083dec9dbfbfa466,
-        type: 3}
+      value: {fileID: -2069157278089061004, guid: 18c272d27b28a784083dec9dbfbfa466, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
