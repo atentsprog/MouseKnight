@@ -184,7 +184,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 4723107735738678597, guid: 0e3502a80399d164ea01f1868f65acbf, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.89411765}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -261,9 +261,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 30
-  moveableDistance: 12
+  normalSpeed: 0
+  moveableStartDistance: 12
+  moveableStopDistance: 8
   mousePointer: {fileID: 0}
   spriteTr: {fileID: 0}
+  mouseDownPoint: {x: 0, y: 0, z: 0}
+  mouseDownTime: 0
+  dashableTime: 0.3
+  dashableDistance: 5
+  dashTime: 1
+  dashSpeedMultiply: 3
+  attackInfos:
+  - attackState: 3
+    duration: 0.5
+    damage: 1
+    nextAttack: 4
+  - attackState: 4
+    duration: 0.5
+    damage: 1
+    nextAttack: 5
+  - attackState: 5
+    duration: 0.5
+    damage: 2
+    nextAttack: 0
   jumpYac:
     serializedVersion: 2
     m_Curve:
@@ -297,8 +318,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  state: 0
   jumpYMultiply: 50
-  jumpTimeMultiply: 0.4
+  jumpTimeMultiply: 2
 --- !u!195 &1671499760
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -9,8 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: PlayerOutLine
   m_Shader: {fileID: 4800000, guid: 62505ee61d20098489c6f861ed25cce1, type: 3}
-  m_ShaderKeywords: _OUTLINEENABLED_ON _OUTLINEMODE_SOLID _OUTLINEPOSITION_INSIDE_UNDER_SPRITE
-    _OUTLINESHAPE_CONTOUR _TILEMODE_STRETCH
+  m_ShaderKeywords: _OUTLINEMODE_SOLID _OUTLINEPOSITION_INSIDE_UNDER_SPRITE _OUTLINESHAPE_CONTOUR
+    _TILEMODE_STRETCH
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -74,7 +74,7 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _OutlineEnabled: 1
+    - _OutlineEnabled: 0
     - _OutlineMode: 0
     - _OutlinePosition: 0
     - _OutlineShape: 0
@@ -85,7 +85,7 @@ Material:
     - _Thickness: 0
     - _TileMode: 0
     - _UVSec: 0
-    - _Weight: 0.23
+    - _Weight: 0.207
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
@@ -93,5 +93,5 @@ Material:
     - _GradientOutline1: {r: 0.16668761, g: 1, b: 0, a: 1}
     - _GradientOutline2: {r: 1, g: 0, b: 0, a: 1}
     - _ImageOutline: {r: 1, g: 1, b: 1, a: 1}
-    - _SolidOutline: {r: 1, g: 1, b: 1, a: 1}
+    - _SolidOutline: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

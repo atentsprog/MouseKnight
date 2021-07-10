@@ -3,13 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
     public float speed = 5;
     [Tooltip("normalSpeed는 시작할때 speed 값으로 채워집니다")]
     public float normalSpeed;
-    public float moveableDistance = 3;
+    [FormerlySerializedAs("moveableDistance")]
+    public float moveableStartDistance = 3;
+    
+    [Tooltip("moveableStartDistance 보다 작은값을 설정해야 합니다")]
+    public float moveableStopDistance = 2;
     public Transform mousePointer;
     public Transform spriteTr;
     Plane plane = new Plane( new Vector3( 0, 1, 0), 0);
@@ -216,6 +221,9 @@ public class Player : MonoBehaviour
             Vector3 hitPoint = ray.GetPoint(enter);
             mousePointer.position = hitPoint;
             float distance = Vector3.Distance(hitPoint, transform.position);
+
+            float moveableDistance = state == StateType.Walk ? moveableStopDistance : moveableStartDistance;
+
             if (distance > moveableDistance)
             {
                 var dir = hitPoint - transform.position;
