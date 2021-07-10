@@ -7,6 +7,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public float speed = 5;
+    [Tooltip("normalSpeed는 시작할때 speed 값으로 채워집니다")]
+    public float normalSpeed;
     public float moveableDistance = 3;
     public Transform mousePointer;
     public Transform spriteTr;
@@ -17,6 +19,7 @@ public class Player : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         spriteTr = GetComponentInChildren<SpriteRenderer>().transform;
 
+        normalSpeed = speed;
         attackInfoMap = attackInfos.ToDictionary(x => x.attackState);
     }
 
@@ -26,26 +29,72 @@ public class Player : MonoBehaviour
 
         Jump();
 
-        Attack();
+        // 마우스 드래그 하면 대시 
+        bool isMouseUpByDash = Dash();
+
+        Attack(isMouseUpByDash);
     }
 
-    private void Attack()
+    // 대시 공격 조건 확인
+    [SerializeField] Vector3 mouseDownPoint;
+    [SerializeField] float mouseDownTime;
+    public float dashableTime = 0.3f;
+    public float dashableDistance = 5f;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>대시했으면 true반환</returns>
+    private bool Dash()
     {
-        // 마우스 클릭하면 공격
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+        // 드래그 했는가?
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            ProcessAttack();
+            mouseDownPoint = Input.mousePosition;
+            mouseDownTime = Time.time;
         }
 
-        // 마우스 우클릭하면 점프
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            float dragTime = Time.time - mouseDownTime;
+            float dragDistance = Vector3.Distance(mouseDownPoint, Input.mousePosition);
+            if( dragTime < dashableTime && dragDistance > dashableDistance)
+            {
+                StartCoroutine(DashCo());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public float dashTime = 1f;
+    public float dashSpeedMultiply = 3f;
+    private IEnumerator DashCo()
+    {
+        //대시 하자.
+        speed = normalSpeed * dashSpeedMultiply;
+        yield return new WaitForSeconds(dashTime);
+        speed = normalSpeed;
+    }
+
+    private void Attack(bool isMouseUpByDash)
+    {
+        // 마우스 클릭하면 공격
+        if (isMouseUpByDash == false) // 대시에 의해 마우스 클릭버튼이 들어 올려진경우는 공격으로 인식하지 않게 막자.
+        {
+            if (Input.GetKeyUp(KeyCode.Mouse0))
+            {
+                ProcessAttack();
+            }
+        }
+
+
+
+        // 대시 중에 공격하면 대시 공격
 
         // 점프 중에 공격하면 공중 공격
 
         // 점프중에 대시하면 대시 각도에 따라 점프앞대시공격, 점프 낙하대시공격
-
-        // 마우스 드래그 하면 대시 
-
-        // 대시 중에 공격하면 대시 공격
     }
 
     Coroutine attackHandle;
@@ -188,11 +237,14 @@ public class Player : MonoBehaviour
                     spriteTr.rotation = Quaternion.Euler(-45, 180, 0);
                 }
 
-                State = StateType.Walk;
+
+                if (jumpState != JumpStateType.Jump)
+                    State = StateType.Walk;
             }
             else
             {
-                State = StateType.Idle;
+                if (jumpState != JumpStateType.Jump)
+                    State = StateType.Idle;
             }
         }
     }
