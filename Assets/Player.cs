@@ -7,17 +7,52 @@ using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
+    public enum JumpStateType
+    {
+        Ground,
+        Jump,
+    }
+    public enum StateType
+    {
+        Idle,
+        Walk,
+        JumpUp,
+        JumpDown,
+        Attack1,
+        Attack2,
+        Attack3,
+        DashMove,
+        DashAttack
+    }
+
+    Animator animator;
+
+    [SerializeField] StateType m_state = StateType.Idle;
+    StateType State
+    {
+        get { return m_state; }
+        set
+        {
+            if (m_state == value)
+                return;
+            m_state = value;
+            animator.Play(m_state.ToString());
+        }
+    }
+    public Transform mousePointer;
+    public Transform spriteTr;
+
+
+    [Header("이동")]
     public float speed = 5;
     [Tooltip("normalSpeed는 시작할때 speed 값으로 채워집니다")]
     public float normalSpeed;
     [FormerlySerializedAs("moveableDistance")]
     public float moveableStartDistance = 3;
-    
+
     [Tooltip("moveableStartDistance 보다 작은값을 설정해야 합니다")]
     public float moveableStopDistance = 2;
-    public Transform mousePointer;
-    public Transform spriteTr;
-    Plane plane = new Plane( new Vector3( 0, 1, 0), 0);
+    Plane plane = new Plane(new Vector3(0, 1, 0), 0);
 
     private void Start()
     {
@@ -41,10 +76,14 @@ public class Player : MonoBehaviour
     }
 
     // 대시 공격 조건 확인
+    [Header("대시")]
     [SerializeField] Vector3 mouseDownPoint;
     [SerializeField] float mouseDownTime;
     public float dashableTime = 0.3f;
     public float dashableDistance = 5f;
+
+    public float dashTime = 0.3f;
+    public float dashSpeedMultiply = 5f;
 
     /// <summary>
     /// 
@@ -61,19 +100,10 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
-            float dragTime = Time.time - mouseDownTime;
-            float dragDistance = Vector3.Distance(mouseDownPoint, Input.mousePosition);
-            //print(dragDistance);
-            //드래그한 방향이 올바른지 확인하자.
-            bool isRightDirDrag = mouseDownPoint.x < Input.mousePosition.x;
-            if(isRightDirDrag)
-            {
-
-            }
+            bool isVaildDrag = IsValidDrag();
 
             //오른쪽으로 드래그 했다면 끝지점이 플레이어의 오른쪽에 있어야한다.
-
-            if ( dragTime < dashableTime && dragDistance > dashableDistance)
+            if (isVaildDrag)
             {
                 StartCoroutine(DashCo());
                 return true;
@@ -81,9 +111,34 @@ public class Player : MonoBehaviour
         }
         return false;
     }
+    
+    private bool IsValidDrag()
+    {
+        Vector3 currentMousePoint = Input.mousePosition;
+        float dragTime = Time.time - mouseDownTime;
+        float dragDistance = Vector3.Distance(mouseDownPoint, currentMousePoint);
+        //print(dragDistance);
 
-    public float dashTime = 0.3f;
-    public float dashSpeedMultiply = 5f;
+        if (dragTime > dashableTime || dragDistance < dashableDistance)
+            return false;
+
+        //드래그한 방향이 올바른지 확인하자.
+        bool isRightDirectionDrag = mouseDownPoint.x < currentMousePoint.x;
+        if (isRightDirectionDrag)
+        {
+            // 오른쪽 드래그
+            // 마우스 현재 위치가 플레이어보다 왼쪽에 있다면 올바른 드래그가 아니다.
+            if (transform.position.x > currentMousePoint.x)
+                return false;
+        }
+        else // 왼쪽 드래그.
+        {
+            if (transform.position.x < currentMousePoint.x)
+                return false;
+        }
+
+        return true;
+    }
 
     // 대시 중에는 방향 전환 안되게 하기(오른쪽 혹은 왼쪽으로만 이동되게 하기(대가건 대시 x)
     private IEnumerator DashCo()
@@ -149,6 +204,7 @@ public class Player : MonoBehaviour
         public int damage;
         public StateType nextAttack;
     }
+    [Header("공격")]
     public List<AttackInfo> attackInfos;
     Dictionary<StateType, AttackInfo> attackInfoMap;
     private IEnumerator AttackCo(AttackInfo currentAttack)
@@ -158,7 +214,6 @@ public class Player : MonoBehaviour
         State = StateType.Idle;
     }
 
-    public AnimationCurve jumpYac;
     private void Jump()
     {
         if (jumpState == JumpStateType.Jump)
@@ -168,38 +223,10 @@ public class Player : MonoBehaviour
             StartCoroutine(JumpCo());
         }
     }
-    public enum JumpStateType
-    {
-        Ground,
-        Jump,
-    }
-    public enum StateType
-    {
-        Idle,
-        Walk,
-        JumpUp,
-        JumpDown,
-        Attack1,
-        Attack2,
-        Attack3,
-        DashMove,
-        DashAttack
-    }
 
-    [SerializeField] StateType m_state = StateType.Idle;
-    StateType State
-    {
-        get { return m_state; }
-        set
-        {
-            if (m_state == value)
-                return;
-            m_state = value;
-            animator.Play(m_state.ToString());
-        }
-    }
-    Animator animator;
+    [Header("점프")]
     JumpStateType jumpState;
+    public AnimationCurve jumpYac;
     public float jumpYMultiply = 1;
     public float jumpTimeMultiply = 1;
     private IEnumerator JumpCo()
