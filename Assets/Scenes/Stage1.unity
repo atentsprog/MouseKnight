@@ -123,6 +123,35 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 23800000, guid: b8da120041ed21d478809b6ba5d7bcc8, type: 2}
+--- !u!1 &50730488 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4352941139188648446, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
+  m_PrefabInstance: {fileID: 6231549770134350382}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &50730492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 50730488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7a957e37da95464baa8067fc6756f4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _startScale: {x: 1, y: 1}
+  _endScale: {x: 1, y: 1}
+  _trailLifetime: 0.2
+  _spawnType: 0
+  _timeBetweenTrailSpawn: 0.1
+  _distanceBetweenTrailSpawn: 0
+  _alphaUpdateOn: 1
+  _maxAlpha: 0.5
+  _minAlpha: 0
+  _useSolidColors: 0
+  _rainbowMode: 0
+  _userSelectedColorPalette: []
 --- !u!1 &351114189
 GameObject:
   m_ObjectHideFlags: 0

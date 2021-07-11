@@ -122,6 +122,7 @@ GameObject:
   - component: {fileID: 4140306179142381772}
   - component: {fileID: 7473570162947868806}
   - component: {fileID: 9044836443858111806}
+  - component: {fileID: 50730492}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -213,6 +214,30 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &50730492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4352941139188648446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7a957e37da95464baa8067fc6756f4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _startScale: {x: 1, y: 1}
+  _endScale: {x: 1, y: 1}
+  _trailLifetime: 0.1
+  _spawnType: 1
+  _timeBetweenTrailSpawn: 0.1
+  _distanceBetweenTrailSpawn: 0
+  _alphaUpdateOn: 1
+  _maxAlpha: 0.5
+  _minAlpha: 0
+  _useSolidColors: 0
+  _rainbowMode: 0
+  _userSelectedColorPalette: []
 --- !u!1 &6034761397873851681
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,12 +285,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60d97a6542f75e54ea82385113679245, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_state: 0
+  mousePointer: {fileID: 0}
+  spriteTr: {fileID: 0}
   speed: 30
   normalSpeed: 0
   moveableStartDistance: 12
   moveableStopDistance: 8
-  mousePointer: {fileID: 0}
-  spriteTr: {fileID: 0}
   mouseDownPoint: {x: 0, y: 0, z: 0}
   mouseDownTime: 0
   dashableTime: 0.3
@@ -318,7 +344,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  m_state: 0
   jumpYMultiply: 35
   jumpTimeMultiply: 0.8
 --- !u!195 &1671499760

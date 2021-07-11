@@ -58,6 +58,7 @@ public class Player : MonoBehaviour
     {
         animator = GetComponentInChildren<Animator>();
         spriteTr = GetComponentInChildren<SpriteRenderer>().transform;
+        trailRenderer = GetComponentInChildren<SpriteTrailRenderer.SpriteTrailRenderer>();
 
         normalSpeed = speed;
         attackInfoMap = attackInfos.ToDictionary(x => x.attackState);
@@ -163,13 +164,16 @@ public class Player : MonoBehaviour
         return true;
     }
 
+    SpriteTrailRenderer.SpriteTrailRenderer trailRenderer;
     // 대시 중에는 방향 전환 안되게 하기(오른쪽 혹은 왼쪽으로만 이동되게 하기(대가건 대시 x)
     private IEnumerator DashCo()
     {
         //대시 하자.
         State = StateType.DashMove;
         speed = normalSpeed * dashSpeedMultiply;
+        trailRenderer.enabled = true;
         yield return new WaitForSeconds(dashTime);
+        trailRenderer.enabled = false;
         speed = normalSpeed;
         State = StateType.Idle;
     }
