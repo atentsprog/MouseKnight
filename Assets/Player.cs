@@ -63,7 +63,17 @@ public class Player : MonoBehaviour
         {
             float dragTime = Time.time - mouseDownTime;
             float dragDistance = Vector3.Distance(mouseDownPoint, Input.mousePosition);
-            if( dragTime < dashableTime && dragDistance > dashableDistance)
+            //print(dragDistance);
+            //드래그한 방향이 올바른지 확인하자.
+            bool isRightDirDrag = mouseDownPoint.x < Input.mousePosition.x;
+            if(isRightDirDrag)
+            {
+
+            }
+
+            //오른쪽으로 드래그 했다면 끝지점이 플레이어의 오른쪽에 있어야한다.
+
+            if ( dragTime < dashableTime && dragDistance > dashableDistance)
             {
                 StartCoroutine(DashCo());
                 return true;
@@ -72,14 +82,18 @@ public class Player : MonoBehaviour
         return false;
     }
 
-    public float dashTime = 1f;
-    public float dashSpeedMultiply = 3f;
+    public float dashTime = 0.3f;
+    public float dashSpeedMultiply = 5f;
+
+    // 대시 중에는 방향 전환 안되게 하기(오른쪽 혹은 왼쪽으로만 이동되게 하기(대가건 대시 x)
     private IEnumerator DashCo()
     {
         //대시 하자.
+        State = StateType.DashMove;
         speed = normalSpeed * dashSpeedMultiply;
         yield return new WaitForSeconds(dashTime);
         speed = normalSpeed;
+        State = StateType.Idle;
     }
 
     private void Attack(bool isMouseUpByDash)
@@ -168,6 +182,8 @@ public class Player : MonoBehaviour
         Attack1,
         Attack2,
         Attack3,
+        DashMove,
+        DashAttack
     }
 
     [SerializeField] StateType m_state = StateType.Idle;
@@ -219,6 +235,7 @@ public class Player : MonoBehaviour
         State = StateType.Idle;
     }
 
+    Vector3 previousDir;
     private void Move()
     {
         if (Time.timeScale == 0) // 타임 스케일이 0이라는건 디버깅을 위해서 스케일을 0으로 한경우이므로 애니메이션 업데이트 정지시킴
@@ -239,15 +256,29 @@ public class Player : MonoBehaviour
 
             if (distance > moveableDistance)
             {
-                var dir = hitPoint - transform.position;
-                dir.Normalize();
+                Vector3 dir;
+                if (State == StateType.DashMove)
+                {
+                    var horizontalDir = previousDir;
+                    horizontalDir.z = 0;
+                    if (horizontalDir.x == 0)
+                        horizontalDir.x = 1;
+                    horizontalDir.Normalize();
+                    dir = horizontalDir;
+                }
+                else
+                {
+                    dir = hitPoint - transform.position;
+                    dir.Normalize();
+                }
+                previousDir = dir;
                 transform.Translate(dir * speed * Time.deltaTime, Space.World);
 
                 //방향(dir)에 따라서
                 //오른쪽이라면 Y : 0, sprite X : 45
                 //왼쪽이라면 Y : 180, sprite X : -45
                 bool isRightSide = dir.x > 0;
-                if(isRightSide)
+                if (isRightSide)
                 {
                     transform.rotation = Quaternion.Euler(Vector3.zero);
                     spriteTr.rotation = Quaternion.Euler(45, 0, 0);
@@ -259,15 +290,20 @@ public class Player : MonoBehaviour
                 }
 
 
-                if (jumpState != JumpStateType.Jump)
+                if (CanChangeWalkOrIdle())
                     State = StateType.Walk;
             }
             else
             {
-                if (jumpState != JumpStateType.Jump)
+                if (CanChangeWalkOrIdle())
                     State = StateType.Idle;
             }
         }
+    }
+
+    private bool CanChangeWalkOrIdle()
+    {
+        return jumpState != JumpStateType.Jump && State != StateType.DashMove;
     }
 
     private bool IsIngAttack()

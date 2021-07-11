@@ -270,8 +270,8 @@ MonoBehaviour:
   mouseDownTime: 0
   dashableTime: 0.3
   dashableDistance: 5
-  dashTime: 1
-  dashSpeedMultiply: 3
+  dashTime: 0.2
+  dashSpeedMultiply: 6
   attackInfos:
   - attackState: 3
     duration: 0.5
