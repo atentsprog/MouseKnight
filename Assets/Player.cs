@@ -85,12 +85,27 @@ public class Player : MonoBehaviour
     public float dashTime = 0.3f;
     public float dashSpeedMultiply = 5f;
 
+    Coroutine dashHandle;
     /// <summary>
     /// 
     /// </summary>
     /// <returns>대시했으면 true반환</returns>
     private bool Dash()
     {
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            bool isVaildDrag = IsValidDashDrag();
+
+            //오른쪽으로 드래그 했다면 끝지점이 플레이어의 오른쪽에 있어야한다.
+            if (isVaildDrag)
+            {
+                if (dashHandle != null)
+                    StopCoroutine(dashHandle);
+                dashHandle = StartCoroutine(DashCo());
+                return true;
+            }
+        }
+
         // 드래그 했는가?
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -98,45 +113,53 @@ public class Player : MonoBehaviour
             mouseDownTime = Time.time;
         }
 
-        if (Input.GetKeyUp(KeyCode.Mouse0))
-        {
-            bool isVaildDrag = IsValidDrag();
-
-            //오른쪽으로 드래그 했다면 끝지점이 플레이어의 오른쪽에 있어야한다.
-            if (isVaildDrag)
-            {
-                StartCoroutine(DashCo());
-                return true;
-            }
-        }
         return false;
     }
     
-    private bool IsValidDrag()
+    private bool IsValidDashDrag()
     {
-        Vector3 currentMousePoint = Input.mousePosition;
         float dragTime = Time.time - mouseDownTime;
-        float dragDistance = Vector3.Distance(mouseDownPoint, currentMousePoint);
+        float dragDistance = Vector3.Distance(mouseDownPoint, Input.mousePosition);
         //print(dragDistance);
 
-        if (dragTime > dashableTime || dragDistance < dashableDistance)
+        if (dragTime > dashableTime)
+        {
+            //Debug.Log($"dragTime:{dragTime}, dashableTime:{dashableTime}");
             return false;
+        }
+
+
+        if (dragDistance < dashableDistance)
+        {
+            //Debug.Log($"dragDistance:{dragDistance}, dashableDistance:{dashableDistance}");
+            return false;
+        }
+
 
         //드래그한 방향이 올바른지 확인하자.
-        bool isRightDirectionDrag = mouseDownPoint.x < currentMousePoint.x;
+        Vector3 currentMouseWorldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        bool isRightDirectionDrag = mouseDownPoint.x < Input.mousePosition.x;
         if (isRightDirectionDrag)
         {
             // 오른쪽 드래그
             // 마우스 현재 위치가 플레이어보다 왼쪽에 있다면 올바른 드래그가 아니다.
-            if (transform.position.x > currentMousePoint.x)
+            if (transform.position.x > currentMouseWorldPoint.x)
+            {
+                //Debug.Log($"오른쪽 드래그 시도 실패, 플레이어보다 왼쪽에 있음 x:{transform.position.x}, currentMousePoint:{currentMouseWorldPoint.x}");
                 return false;
+            }
+            dashDirection = new Vector3(1, 0, 0);
         }
         else // 왼쪽 드래그.
         {
-            if (transform.position.x < currentMousePoint.x)
+            if (transform.position.x < currentMouseWorldPoint.x)
+            {
+                //Debug.Log($"왼쪽 드래그 시도 실패, 플레이어보다 오른쪽에 있음 x:{transform.position.x}, currentMousePoint:{currentMouseWorldPoint.x}");
                 return false;
+            }
+            dashDirection = new Vector3(-1, 0, 0);
         }
-
+        //Debug.Log("대시 성공");
         return true;
     }
 
@@ -262,7 +285,7 @@ public class Player : MonoBehaviour
         State = StateType.Idle;
     }
 
-    Vector3 previousDir;
+    Vector3 dashDirection;
     private void Move()
     {
         if (Time.timeScale == 0) // 타임 스케일이 0이라는건 디버깅을 위해서 스케일을 0으로 한경우이므로 애니메이션 업데이트 정지시킴
@@ -281,24 +304,19 @@ public class Player : MonoBehaviour
 
             float moveableDistance = m_state == StateType.Walk ? moveableStopDistance : moveableStartDistance;
 
-            if (distance > moveableDistance)
+            if (State == StateType.DashMove || distance > moveableDistance)
             {
                 Vector3 dir;
                 if (State == StateType.DashMove)
                 {
-                    var horizontalDir = previousDir;
-                    horizontalDir.z = 0;
-                    if (horizontalDir.x == 0)
-                        horizontalDir.x = 1;
-                    horizontalDir.Normalize();
-                    dir = horizontalDir;
+                    dir = dashDirection;
                 }
                 else
                 {
                     dir = hitPoint - transform.position;
                     dir.Normalize();
                 }
-                previousDir = dir;
+
                 transform.Translate(dir * speed * Time.deltaTime, Space.World);
 
                 //방향(dir)에 따라서
