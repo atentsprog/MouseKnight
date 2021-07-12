@@ -6,7 +6,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public float speed = 5;
-    public float moveableDistance = 3;
+    public float walkDistance = 12;
+    public float stopDistance = 7;
     public Transform mousePointer;
     public Transform spriteTr;
     Plane plane = new Plane( new Vector3( 0, 1, 0), 0);
@@ -43,11 +44,12 @@ public class Player : MonoBehaviour
     {
         Idle,
         Walk,
-        Jump,
+        JumpUp,
+        JumpDown,
         Attack,
     }
 
-    StateType state = StateType.Idle;
+    [SerializeField] StateType state = StateType.Idle;
     StateType State
     {
         get { return state; }
@@ -55,6 +57,10 @@ public class Player : MonoBehaviour
         {
             if (state == value)
                 return;
+            
+            if(EditorOption.Options[OptionType.Player상태변화로그])
+                Debug.Log($"state:{state} => value:{value}");
+
             state = value;
             animator.Play(state.ToString());
         }
@@ -66,18 +72,27 @@ public class Player : MonoBehaviour
     private IEnumerator JumpCo()
     {
         jumpState = JumpStateType.Jump;
-        State = StateType.Jump;
+        State = StateType.JumpUp;
         float jumpStartTime = Time.time;
         float jumpDuration = jumpYac[jumpYac.length - 1].time;
         jumpDuration *= jumpTimeMultiply;
         float jumpEndTime = jumpStartTime + jumpDuration;
         float sumEvaluateTime = 0;
+        float previousY = 0;
         while (Time.time < jumpEndTime)
         {
             float y = jumpYac.Evaluate(sumEvaluateTime / jumpTimeMultiply);
             y *= jumpYMultiply;
             transform.Translate(0, y, 0);
             yield return null;
+
+            if (previousY > y)
+            {
+                //떨어지는 모션으로 바꾸자.
+                State = StateType.JumpDown;
+            }
+            previousY = y;
+
             sumEvaluateTime += Time.deltaTime;
         }
         jumpState = JumpStateType.Ground;
@@ -86,6 +101,9 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
+        if (Time.timeScale == 0)
+            return;
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (plane.Raycast(ray, out float enter))
@@ -93,7 +111,14 @@ public class Player : MonoBehaviour
             Vector3 hitPoint = ray.GetPoint(enter);
             mousePointer.position = hitPoint;
             float distance = Vector3.Distance(hitPoint, transform.position);
-            if (distance > moveableDistance)
+
+            float movealbeDistance = stopDistance;
+            // State가 Walk 일땐 7(stopDistance)사용.
+            // Idle에서 Walk로 갈땐 12(WalkDistance)사용
+            if (State == StateType.Idle)
+                movealbeDistance = walkDistance;
+
+            if (distance > movealbeDistance)
             {
                 var dir = hitPoint - transform.position;
                 dir.Normalize();
@@ -114,11 +139,13 @@ public class Player : MonoBehaviour
                     spriteTr.rotation = Quaternion.Euler(-45, 180, 0);
                 }
 
-                State = StateType.Walk;
+                if(jumpState != JumpStateType.Jump)
+                    State = StateType.Walk;
             }
             else
             {
-                State = StateType.Idle;
+                if (jumpState != JumpStateType.Jump)
+                    State = StateType.Idle;
             }
         }
     }
