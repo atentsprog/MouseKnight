@@ -6,6 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public float speed = 5;
+    float normalSpeed;
     public float walkDistance = 12;
     public float stopDistance = 7;
     public Transform mousePointer;
@@ -14,6 +15,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        normalSpeed = speed;
         animator = GetComponentInChildren<Animator>();
         spriteTr = GetComponentInChildren<SpriteRenderer>().transform;
     }
@@ -23,6 +25,66 @@ public class Player : MonoBehaviour
         Move();
 
         Jump();
+
+        Dash();
+    }
+
+    public float dashableDistance = 10;
+    public float dashableTime = 0.4f;
+    public float mouseDownTime;
+    public Vector3 mouseDownPosition;
+    private void Dash()
+    {
+        // 마우스 드래그를 
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            mouseDownTime = Time.time;
+            mouseDownPosition = Input.mousePosition; // 
+        }
+
+
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            bool isDashDrag = IsSucceesDashDrag();
+            if(isDashDrag)
+            {
+                StartCoroutine(DashCo());
+            }
+        }
+    }
+
+    public float dashTime = 0.3f;
+    public float dashSpeedMultiplySpeed = 4f;
+    Vector3 dashDirection;
+    private IEnumerator DashCo()
+    {
+        //방향을 바꿀 수 없게끔, -> 진행방향으로 이동 -> 대각선 이동 대각선이동 -> 드래그방향으로 이동할건지
+        //    플레이이어이동방향 x이동할 껀지
+        //// dashDirection x방향만 사용.
+        dashDirection = Input.mousePosition - mouseDownPosition;
+        dashDirection.y = 0;
+        dashDirection.z = 0;
+        dashDirection.Normalize();
+        speed = normalSpeed * dashSpeedMultiplySpeed;
+        State = StateType.Dash;
+        yield return new WaitForSeconds(dashTime);
+        speed = normalSpeed;
+        State = StateType.Idle;
+    }
+
+    private bool IsSucceesDashDrag()
+    {
+        // 시간 체크.
+        float dragTime = Time.time - mouseDownTime;
+        if (dragTime > dashableTime)
+            return false;
+
+        // 거리체크.
+        float dragDistance = Vector3.Distance(mouseDownPosition, Input.mousePosition);
+        if (dragDistance < dashableDistance)
+            return false;
+
+        return true;
     }
 
     public AnimationCurve jumpYac;
@@ -46,6 +108,7 @@ public class Player : MonoBehaviour
         Walk,
         JumpUp,
         JumpDown,
+        Dash,
         Attack,
     }
 
@@ -122,13 +185,17 @@ public class Player : MonoBehaviour
             {
                 var dir = hitPoint - transform.position;
                 dir.Normalize();
+
+                if (State == StateType.Dash)
+                    dir = dashDirection;
+
                 transform.Translate(dir * speed * Time.deltaTime, Space.World);
 
                 //방향(dir)에 따라서
                 //오른쪽이라면 Y : 0, sprite X : 45
                 //왼쪽이라면 Y : 180, sprite X : -45
                 bool isRightSide = dir.x > 0;
-                if(isRightSide)
+                if (isRightSide)
                 {
                     transform.rotation = Quaternion.Euler(Vector3.zero);
                     spriteTr.rotation = Quaternion.Euler(45, 0, 0);
@@ -139,13 +206,24 @@ public class Player : MonoBehaviour
                     spriteTr.rotation = Quaternion.Euler(-45, 180, 0);
                 }
 
-                if(jumpState != JumpStateType.Jump)
+                if (ChangeableState())
                     State = StateType.Walk;
             }
             else
             {
-                if (jumpState != JumpStateType.Jump)
+                if (ChangeableState())
                     State = StateType.Idle;
+            }
+
+            bool ChangeableState()
+            {
+                if (jumpState == JumpStateType.Jump)
+                    return false;
+
+                if (state == StateType.Dash)
+                    return false;
+
+                return true;
             }
         }
     }
