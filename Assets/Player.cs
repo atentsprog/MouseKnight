@@ -1,10 +1,12 @@
-﻿using System;
+﻿using NaughtyAttributes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] StateType state = StateType.Idle;
     public float speed = 5;
     float normalSpeed;
     public float walkDistance = 12;
@@ -12,6 +14,22 @@ public class Player : MonoBehaviour
     public Transform mousePointer;
     public Transform spriteTr;
     Plane plane = new Plane( new Vector3( 0, 1, 0), 0);
+
+    StateType State
+    {
+        get { return state; }
+        set
+        {
+            if (state == value)
+                return;
+
+            if (EditorOption.Options[OptionType.Player상태변화로그])
+                Debug.Log($"state:{state} => value:{value}");
+
+            state = value;
+            animator.Play(state.ToString());
+        }
+    }
 
     private void Start()
     {
@@ -29,10 +47,11 @@ public class Player : MonoBehaviour
         Dash();
     }
 
-    public float dashableDistance = 10;
-    public float dashableTime = 0.4f;
-    public float mouseDownTime;
-    public Vector3 mouseDownPosition;
+
+    [Foldout("대시")] public float dashableDistance = 10;
+    [Foldout("대시")] public float dashableTime = 0.4f;
+    float mouseDownTime;
+    Vector3 mouseDownPosition;
     private void Dash()
     {
         // 마우스 드래그를 
@@ -53,8 +72,8 @@ public class Player : MonoBehaviour
         }
     }
 
-    public float dashTime = 0.3f;
-    public float dashSpeedMultiplySpeed = 4f;
+    [Foldout("대시")] public float dashTime = 0.3f;
+    [Foldout("대시")] public float dashSpeedMultiplySpeed = 4f;
     Vector3 dashDirection;
     private IEnumerator DashCo()
     {
@@ -87,7 +106,7 @@ public class Player : MonoBehaviour
         return true;
     }
 
-    public AnimationCurve jumpYac;
+    [BoxGroup("점프")] public AnimationCurve jumpYac;
     private void Jump()
     {
         if (jumpState == JumpStateType.Jump)
@@ -112,26 +131,10 @@ public class Player : MonoBehaviour
         Attack,
     }
 
-    [SerializeField] StateType state = StateType.Idle;
-    StateType State
-    {
-        get { return state; }
-        set
-        {
-            if (state == value)
-                return;
-            
-            if(EditorOption.Options[OptionType.Player상태변화로그])
-                Debug.Log($"state:{state} => value:{value}");
-
-            state = value;
-            animator.Play(state.ToString());
-        }
-    }
     Animator animator;
     JumpStateType jumpState;
-    public float jumpYMultiply = 1;
-    public float jumpTimeMultiply = 1;
+    [BoxGroup("점프")] public float jumpYMultiply = 1;
+    [BoxGroup("점프")] public float jumpTimeMultiply = 1;
     private IEnumerator JumpCo()
     {
         jumpState = JumpStateType.Jump;
