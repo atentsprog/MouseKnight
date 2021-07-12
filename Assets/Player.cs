@@ -7,6 +7,11 @@ using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
+    public static Player instance;
+    private void Awake()
+    {
+        instance = this;
+    }
     public enum JumpStateType
     {
         Ground,
@@ -59,6 +64,7 @@ public class Player : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         spriteTr = GetComponentInChildren<SpriteRenderer>().transform;
         trailRenderer = GetComponentInChildren<SpriteTrailRenderer.SpriteTrailRenderer>();
+        trailRenderer.enabled = false;
 
         normalSpeed = speed;
         attackInfoMap = attackInfos.ToDictionary(x => x.attackState);
