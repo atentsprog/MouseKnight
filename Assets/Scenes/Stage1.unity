@@ -916,13 +916,21 @@ PrefabInstance:
       propertyPath: mousePointer
       value: 
       objectReference: {fileID: 538293307}
+    - target: {fileID: 1671499759, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
+      propertyPath: enemyLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 3008578253491253866, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4848238699823408812, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4848238699823408812, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -51.5
+      value: -0.8
       objectReference: {fileID: 0}
     - target: {fileID: 4848238699823408812, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
       propertyPath: m_LocalPosition.y
@@ -930,7 +938,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4848238699823408812, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.1
+      value: -1.6
       objectReference: {fileID: 0}
     - target: {fileID: 4848238699823408812, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
       propertyPath: m_LocalRotation.w

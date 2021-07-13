@@ -88,9 +88,25 @@ public class Player : MonoBehaviour
     }
 
     public float attackTime = 1;
+    public float attackApplyTime = 0.2f;
+    public LayerMask enemyLayer;
+    public SphereCollider attackCollider;
+    public float power = 10;
     private IEnumerator AttackCo()
     {
         State = StateType.Attack;
+        yield return new WaitForSeconds(attackApplyTime);
+        //실제 어택하는 부분.
+
+        var enemyColliders = Physics.OverlapSphere(
+            attackCollider.transform.position
+            , attackCollider.radius, enemyLayer);
+        foreach (var item in enemyColliders)
+        {
+            item.GetComponent<Goblin>().TakeHit(power);
+        }
+
+
         yield return new WaitForSeconds(attackTime);
         State = StateType.Idle;
     }

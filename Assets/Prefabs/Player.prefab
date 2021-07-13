@@ -11,9 +11,8 @@ GameObject:
   - component: {fileID: 2593184395409606332}
   - component: {fileID: 8003649840704412800}
   - component: {fileID: 4093326903281784482}
-  - component: {fileID: 7613664600338088564}
   - component: {fileID: 1570537935}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -83,20 +82,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7613664600338088564
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 311247665923803229}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &1570537935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,6 +96,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   originalY: 0
+--- !u!1 &3008578253491253866
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8854446321982112524}
+  - component: {fileID: 8466875748288778906}
+  m_Layer: 7
+  m_Name: AttackCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &8854446321982112524
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3008578253491253866}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9.07, y: 8.17, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4848238699823408812}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &8466875748288778906
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3008578253491253866}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 8.6
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4352941139188648446
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,7 +152,7 @@ GameObject:
   - component: {fileID: 7473570162947868806}
   - component: {fileID: 9044836443858111806}
   - component: {fileID: 881127240}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -252,7 +281,7 @@ GameObject:
   - component: {fileID: 1671499759}
   - component: {fileID: 1671499760}
   - component: {fileID: 387193697}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -272,6 +301,7 @@ Transform:
   m_Children:
   - {fileID: 4140306179142381772}
   - {fileID: 2593184395409606332}
+  - {fileID: 8854446321982112524}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -293,9 +323,19 @@ MonoBehaviour:
   stopDistance: 7
   mousePointer: {fileID: 0}
   spriteTr: {fileID: 4140306179142381772}
+  attackTime: 0.5
+  attackApplyTime: 0.2
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  attackCollider: {fileID: 8466875748288778906}
+  power: 10
   dashableDistance: 10
   dashableTime: 0.4
   dashTime: 0.3
+  hp: 100
+  takeHitTime: 0.3
+  deathTime: 0.5
   dashSpeedMultiplySpeed: 4
   jumpYac:
     serializedVersion: 2

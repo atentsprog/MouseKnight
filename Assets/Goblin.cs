@@ -14,13 +14,25 @@ public class Goblin : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         player = Player.instance;
 
-        currentFsm = IdleFSM;
+        CurrentFsm = IdleFSM;
+
         while (true) // 상태를 무한히 반복해서 실행하는 부분.
         {
-            yield return StartCoroutine(currentFsm());
+            fsmHandle = StartCoroutine(CurrentFsm());
+            while (fsmHandle != null)
+                yield return null;
         }
     }
-    Func<IEnumerator> currentFsm;
+    Coroutine fsmHandle;
+    Func<IEnumerator> CurrentFsm
+    {
+        get { return m_currentFsm; }
+        set { 
+            m_currentFsm = value;
+            fsmHandle = null;
+        }
+    }
+    Func<IEnumerator> m_currentFsm;
     Player player;
     public float detectRange = 40;
     public float attackRange = 10;
@@ -45,7 +57,7 @@ public class Goblin : MonoBehaviour
         {
             yield return null;
         }
-        currentFsm = ChaseFSM;
+        CurrentFsm = ChaseFSM;
     }
     public float speed = 34;
     private IEnumerator ChaseFSM()
@@ -70,7 +82,7 @@ public class Goblin : MonoBehaviour
 
             if (Vector3.Distance(transform.position, player.transform.position) < attackRange)
             {
-                currentFsm = AttackFSM;
+                CurrentFsm = AttackFSM;
                 yield break;
             }
 
@@ -96,6 +108,32 @@ public class Goblin : MonoBehaviour
         }
 
         yield return new WaitForSeconds(attackTime - attackApplyTime);
-        currentFsm = ChaseFSM;
+        CurrentFsm = ChaseFSM;
+    }
+
+    public float hp = 100;
+    internal void TakeHit(float damage)
+    {
+        hp -= damage;        
+        StopCoroutine(fsmHandle);
+        CurrentFsm = TakeHitFSM;
+    }
+
+    public float takeHitTime = 0.3f;
+    private IEnumerator TakeHitFSM()
+    {
+        animator.Play("TakeHit");
+        yield return new WaitForSeconds(takeHitTime);
+        if (hp > 0)
+            CurrentFsm = IdleFSM;
+        else
+            CurrentFsm = DeathFSM;//hp < 0 으면 죽자.
+    }
+    public float deathTime = 0.5f;
+    private IEnumerator DeathFSM()
+    {
+        animator.Play("Death");
+        yield return new WaitForSeconds(deathTime);
+        Destroy(gameObject);
     }
 }
