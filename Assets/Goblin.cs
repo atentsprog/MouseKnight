@@ -21,6 +21,7 @@ public class Goblin : MonoBehaviour
 
     Animator animator;
     Transform target;
+    IEnumerator fsmHandle;
     IEnumerator Start()
     {
         target = Player.instance.transform;
@@ -29,34 +30,54 @@ public class Goblin : MonoBehaviour
         animator.Play("Idle");
 
         NavMeshAgent agent = GetComponent<NavMeshAgent>();
+        infoTextMesh = GetComponentInChildren<TextMesh>();
 
         // 플레이어가 근접할때까지 대기
-        while (Vector3.Distance(target.position, transform.position) > watchRange)
-            yield return null;
+        fsm = IdleCo;
 
-        // 플레이어 쫒아가서 때리자.
-        fsm = ChaseTargetFSM;
         while (hp > 0)
         {
             fsmChange = false;
-            fsmHandle = StartCoroutine(fsm());
-            yield return fsmHandle;
+            fsmHandle = fsm();
+            StartCoroutine(fsmHandle);
+
+            while (fsmHandle != null)
+            {
+                yield return null;
+            }
+            //Debug.LogWarning("코루틴 1개 끝남");
         }
+        //Debug.LogWarning("코루틴 완전 끝남");
     }
-    Coroutine fsmHandle;
+
+    IEnumerator IdleCo()
+    {
+        while (Vector3.Distance(target.position, transform.position) > watchRange)
+            yield return null;
+
+        Fsm = ChaseTargetFSM;
+    }
+
     Func<IEnumerator> fsm;
     Func<IEnumerator> Fsm
     {
         set
         {
-            if(fsmHandle!= null)
+            if (fsmHandle != null)
+            {
                 StopCoroutine(fsmHandle);
+                fsmHandle = null;
+            }
 
             fsm = value;
             fsmChange = true;
+
+            infoTextMesh.text = fsm.Method.ToString(); ;
         }
     }
+    TextMesh infoTextMesh;
     bool fsmChange = false;
+
 
     IEnumerator ChaseTargetFSM()
     {
