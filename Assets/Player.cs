@@ -48,19 +48,56 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        Move();
+        if (CanMoveState())
+        {
+            Move();
+            Jump();
+        }
 
-        Jump();
+        bool isSucceedDash = Dash();
 
-        Dash();
+        Attack(isSucceedDash);
     }
 
+    private bool CanMoveState()
+    {
+        if (State == StateType.Attack)
+            return false;
+
+        if (State == StateType.TakeHit)
+            return false;
+
+        if (State == StateType.Death)
+            return false;
+
+        return true;
+    }
+
+    private void Attack(bool isSucceedDash)
+    {
+        if (isSucceedDash)
+            return;
+
+        // 마우스 왼쪽 버튼 땠을때 공격 시키자.
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            StartCoroutine(AttackCo());
+        }
+    }
+
+    public float attackTime = 1;
+    private IEnumerator AttackCo()
+    {
+        State = StateType.Attack;
+        yield return new WaitForSeconds(attackTime);
+        State = StateType.Idle;
+    }
 
     [Foldout("대시")] public float dashableDistance = 10;
     [Foldout("대시")] public float dashableTime = 0.4f;
     float mouseDownTime;
     Vector3 mouseDownPosition;
-    private void Dash()
+    private bool Dash()
     {
         // 마우스 드래그를 
         if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -76,11 +113,44 @@ public class Player : MonoBehaviour
             if(isDashDrag)
             {
                 StartCoroutine(DashCo());
+                return true;
             }
         }
+
+        return false;
     }
 
     [Foldout("대시")] public float dashTime = 0.3f;
+
+    public float hp = 100;
+    internal void TakeHit(int damge)
+    {
+        hp -= damge;
+
+        if (hp > 0)
+        {
+            StartCoroutine(TakeHitCo());
+        }
+        else
+            StartCoroutine(DeathCo());//hp < 0 으면 죽자.
+    }
+
+    public float takeHitTime = 0.3f;
+    private IEnumerator TakeHitCo()
+    {
+        State = StateType.TakeHit; //피격 모션하자.
+        yield return new WaitForSeconds(takeHitTime);
+        State = StateType.Idle;
+    }
+
+    public float deathTime = 0.5f;
+    private IEnumerator DeathCo()
+    {
+        State = StateType.Death; //피격 모션하자.
+        yield return new WaitForSeconds(deathTime);
+        Debug.LogWarning("게임 종료");
+    }
+
     [Foldout("대시")] public float dashSpeedMultiplySpeed = 4f;
     Vector3 dashDirection;
     private IEnumerator DashCo()
@@ -137,6 +207,8 @@ public class Player : MonoBehaviour
         JumpDown,
         Dash,
         Attack,
+        TakeHit,
+        Death
     }
 
     Animator animator;
