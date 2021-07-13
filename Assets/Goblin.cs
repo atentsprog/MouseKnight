@@ -126,9 +126,12 @@ public class Goblin : MonoBehaviour, ITakeHit
     public float disappearTimeWhenDeath = 1;
     private IEnumerator DeathFSM()
     {
+        GameManager.instance.AddPoint(100);
         animator.Play("Death");
         yield return new WaitForSeconds(disappearTimeWhenDeath);
-        //StageManager.instance.AddPoint(100);
+
+        //todo:몬스터가 다 죽었다면 다음 스테이지 로드 하자.
+
         //DotTween사용해서 투명해진 다음에 사라지게 하자.
         Destroy(gameObject);
     }
