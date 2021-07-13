@@ -72,6 +72,13 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        //Test, 모든 몬스터 데미지 주기.
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            FindObjectOfType<Goblin>().OnDamage(11);
+        }
+
+
         Move();
 
         Jump();
@@ -233,9 +240,11 @@ public class Player : MonoBehaviour
     public class AttackInfo
     {
         public StateType attackState;
-        public float duration;
-        public int damage;
         public StateType nextAttack;
+        public float duration;
+        public float attackTime; // 공격 시작되는 시점.
+        public int damage;
+        public Collider attackAreaCollider;
     }
     [Header("공격")]
     public List<AttackInfo> attackInfos;
@@ -243,10 +252,20 @@ public class Player : MonoBehaviour
     private IEnumerator AttackCo(AttackInfo currentAttack)
     {
         State = currentAttack.attackState;
-        yield return new WaitForSeconds(currentAttack.duration); // 공격이 끝날때까지 쉬자. 
+        yield return new WaitForSeconds(currentAttack.attackTime); //공격 시작되는 시점.
+        //공격 범위에 있는 몬스터를 때리자. -> 어떻게 감지할 것인가? 
+        //공격 콜라이더 위치참조해서 충돌 감지 로직 돌리자.
+        SphereCollider sphereCollider = currentAttack.attackAreaCollider as SphereCollider;
+        var enemyColliders = Physics.OverlapSphere(sphereCollider.transform.position, sphereCollider.radius, enemyLayer);
+        foreach (var item in enemyColliders)
+        {
+            item.GetComponent<Goblin>().OnDamage(currentAttack.damage);
+        }
+
+        yield return new WaitForSeconds(currentAttack.duration - currentAttack.attackTime); // 공격이 끝날때까지 쉬자. 
         State = StateType.Idle;
     }
-
+    public LayerMask enemyLayer;
     private void Jump()
     {
         if (jumpState == JumpStateType.Jump)
@@ -336,12 +355,12 @@ public class Player : MonoBehaviour
                 if (isRightSide)
                 {
                     transform.rotation = Quaternion.Euler(Vector3.zero);
-                    spriteTr.rotation = Quaternion.Euler(45, 0, 0);
+                    //spriteTr.rotation = Quaternion.Euler(0, 0, 0);
                 }
                 else
                 {
                     transform.rotation = Quaternion.Euler(0, 180, 0);
-                    spriteTr.rotation = Quaternion.Euler(-45, 180, 0);
+                    //spriteTr.rotation = Quaternion.Euler(0, 180, 0);
                 }
 
 

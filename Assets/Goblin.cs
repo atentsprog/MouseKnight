@@ -3,13 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Goblin : MonoBehaviour
 {
     public float watchRange = 25;
     public float attackRange = 10;
     public float speed = 40;
-    public int hp = 100;
+    public float hp = 100;
+    private float maxHp;
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
@@ -18,7 +20,7 @@ public class Goblin : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
-
+    Image hpBar;
     Animator animator;
     Transform target;
     Coroutine fsmHandle;
@@ -31,7 +33,8 @@ public class Goblin : MonoBehaviour
 
         NavMeshAgent agent = GetComponent<NavMeshAgent>();
         infoTextMesh = GetComponentInChildren<TextMesh>();
-
+        hpBar = GetComponentInChildren<Image>();
+        maxHp = hp;
         // 플레이어가 근접할때까지 대기
         fsm = IdleCo;
 
@@ -71,7 +74,7 @@ public class Goblin : MonoBehaviour
             fsm = value;
             fsmChange = true;
 
-            infoTextMesh.text = fsm.Method.ToString(); ;
+            infoTextMesh.text = fsm.Method.Name.ToString(); ;
         }
     }
     TextMesh infoTextMesh;
@@ -111,7 +114,8 @@ public class Goblin : MonoBehaviour
 
     public void OnDamage(int damage)
     {
-        hp -= damage;   
+        hp -= damage;
+        hpBar.fillAmount = hp / maxHp;
         Fsm = OnAttacked;
     }
     public float attackedTime = 0.7f;
