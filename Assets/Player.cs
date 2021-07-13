@@ -195,18 +195,16 @@ public class Player : MonoBehaviour
                 transform.Translate(dir * speed * Time.deltaTime, Space.World);
 
                 //방향(dir)에 따라서
-                //오른쪽이라면 Y : 0, sprite X : 45
-                //왼쪽이라면 Y : 180, sprite X : -45
+                //오른쪽이라면 Y : 0
+                //왼쪽이라면 Y : 180
                 bool isRightSide = dir.x > 0;
                 if (isRightSide)
                 {
                     transform.rotation = Quaternion.Euler(Vector3.zero);
-                    spriteTr.rotation = Quaternion.Euler(45, 0, 0);
                 }
                 else
                 {
                     transform.rotation = Quaternion.Euler(0, 180, 0);
-                    spriteTr.rotation = Quaternion.Euler(-45, 180, 0);
                 }
 
                 if (ChangeableState())
