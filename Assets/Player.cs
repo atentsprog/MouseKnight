@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Player : MonoBehaviour
 {
@@ -30,12 +31,13 @@ public class Player : MonoBehaviour
             animator.Play(state.ToString());
         }
     }
-
+    NavMeshAgent agent;
     private void Start()
     {
         normalSpeed = speed;
         animator = GetComponentInChildren<Animator>();
         spriteTr = GetComponentInChildren<SpriteRenderer>().transform;
+        agent = GetComponent<NavMeshAgent>();
     }
 
     void Update()
@@ -145,22 +147,29 @@ public class Player : MonoBehaviour
         float jumpEndTime = jumpStartTime + jumpDuration;
         float sumEvaluateTime = 0;
         float previousY = 0;
+        agent.enabled = false;  
         while (Time.time < jumpEndTime)
         {
             float y = jumpYac.Evaluate(sumEvaluateTime / jumpTimeMultiply);
-            y *= jumpYMultiply;
+            y *= jumpYMultiply; 
             transform.Translate(0, y, 0);
             yield return null;
-
-            if (previousY > y)
+             
+            if (previousY > transform.position.y)
             {
                 //떨어지는 모션으로 바꾸자.
                 State = StateType.JumpDown;
             }
-            previousY = y;
 
+            if (transform.position.y < 0)
+            {
+                break;
+            }
+
+            previousY = transform.position.y;
             sumEvaluateTime += Time.deltaTime;
         }
+        agent.enabled = true;
         jumpState = JumpStateType.Ground;
         State = StateType.Idle;
     }

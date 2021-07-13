@@ -418,37 +418,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &881127236 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4352941139188648446, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
-  m_PrefabInstance: {fileID: 6231549770134350382}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &881127240
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 881127236}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7a957e37da95464baa8067fc6756f4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _startScale: {x: 1, y: 1}
-  _endScale: {x: 1, y: 1}
-  _trailLifetime: 0.2
-  _spawnType: 1
-  _timeBetweenTrailSpawn: 0.5
-  _distanceBetweenTrailSpawn: 2
-  _alphaUpdateOn: 1
-  _maxAlpha: 0.5
-  _minAlpha: 0
-  _useSolidColors: 0
-  _rainbowMode: 0
-  _userSelectedColorPalette:
-  - serializedVersion: 2
-    rgba: 0
 --- !u!1 &920616945
 GameObject:
   m_ObjectHideFlags: 0
@@ -887,40 +856,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1671499759, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
-      propertyPath: dashCoolTime
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1671499759, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
       propertyPath: mousePointer
       value: 
       objectReference: {fileID: 538293307}
-    - target: {fileID: 4140306179142381772, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.414
-      objectReference: {fileID: 0}
-    - target: {fileID: 4140306179142381772, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4140306179142381772, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4140306179142381772, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4848238699823408812, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4848238699823408812, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.4
+      value: -8.6
       objectReference: {fileID: 0}
     - target: {fileID: 4848238699823408812, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4848238699823408812, guid: 89c4bcfd4341bab4ea24d1b2728bfe21, type: 3}
       propertyPath: m_LocalPosition.z
