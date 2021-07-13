@@ -277,13 +277,14 @@ public class Player : MonoBehaviour
                 movealbeDistance = walkDistance;
 
             Vector3 dir = hitPoint - transform.position;
+
+            if (State == StateType.Dash)
+                dir = dashDirection;
+
             dir.Normalize();
 
-            if (distance > movealbeDistance)
+            if (distance > movealbeDistance || State == StateType.Dash)
             {
-                if (State == StateType.Dash)
-                    dir = dashDirection;
-
                 transform.Translate(dir * speed * Time.deltaTime, Space.World);
 
                 if (ChangeableState())
