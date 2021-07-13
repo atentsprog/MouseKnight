@@ -21,7 +21,7 @@ public class Goblin : MonoBehaviour
 
     Animator animator;
     Transform target;
-    IEnumerator fsmHandle;
+    Coroutine fsmHandle;
     IEnumerator Start()
     {
         target = Player.instance.transform;
@@ -38,8 +38,7 @@ public class Goblin : MonoBehaviour
         while (hp > 0)
         {
             fsmChange = false;
-            fsmHandle = fsm();
-            StartCoroutine(fsmHandle);
+            fsmHandle = StartCoroutine(fsm());
 
             while (fsmHandle != null)
             {
