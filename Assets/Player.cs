@@ -369,46 +369,51 @@ public class Player : MonoBehaviour, IReceiveMeleeAttackInfo, ITakeHit
 
             float moveableDistance = m_state == StateType.Walk ? moveableStopDistance : moveableStartDistance;
 
+            Vector3 dir = SetSpriteDirection(hitPoint);
+
             if (State == StateType.DashMove || distance > moveableDistance)
             {
-                Vector3 dir;
-                if (State == StateType.DashMove)
-                {
-                    dir = dashDirection;
-                }
-                else
-                {
-                    dir = hitPoint - transform.position;
-                    dir.Normalize();
-                }
-
                 transform.Translate(dir * speed * Time.deltaTime, Space.World);
-
-                //방향(dir)에 따라서
-                //오른쪽이라면 Y : 0, sprite X : 45
-                //왼쪽이라면 Y : 180, sprite X : -45
-                bool isRightSide = dir.x > 0;
-                if (isRightSide)
-                {
-                    transform.rotation = Quaternion.Euler(Vector3.zero);
-                    //spriteTr.rotation = Quaternion.Euler(0, 0, 0);
-                }
-                else
-                {
-                    transform.rotation = Quaternion.Euler(0, 180, 0);
-                    //spriteTr.rotation = Quaternion.Euler(0, 180, 0);
-                }
-
 
                 if (CanChangeWalkOrIdle())
                     State = StateType.Walk;
             }
             else
             {
+                // 움지이지 않더라도 마우스 방향에 따라 오른쪽 왼쪽 보는건 수정하자
                 if (CanChangeWalkOrIdle())
                     State = StateType.Idle;
             }
         }
+    }
+
+    private Vector3 SetSpriteDirection(Vector3 hitPoint)
+    {
+        Vector3 dir;
+        if (State == StateType.DashMove)
+        {
+            dir = dashDirection;
+        }
+        else
+        {
+            dir = hitPoint - transform.position;
+            dir.Normalize();
+        }
+
+        //방향(dir)에 따라서
+        //오른쪽이라면 Y : 0, sprite X : 45
+        //왼쪽이라면 Y : 180, sprite X : -45
+        bool isRightSide = dir.x > 0;
+        if (isRightSide)
+        {
+            transform.rotation = Quaternion.Euler(Vector3.zero);
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
+
+        return dir;
     }
 
     private bool CanChangeWalkOrIdle()
