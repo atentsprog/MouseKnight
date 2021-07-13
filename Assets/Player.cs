@@ -7,6 +7,12 @@ using UnityEngine.AI;
 
 public class Player : MonoBehaviour
 {
+    public static Player instance;
+    private void Awake()
+    {
+        instance = this;
+    }
+
     [SerializeField] StateType state = StateType.Idle;
     public float speed = 5;
     float normalSpeed;
@@ -146,12 +152,12 @@ public class Player : MonoBehaviour
         jumpDuration *= jumpTimeMultiply;
         float jumpEndTime = jumpStartTime + jumpDuration;
         float sumEvaluateTime = 0;
-        float previousY = 0;
+        float previousY = float.MinValue;
         agent.enabled = false;  
         while (Time.time < jumpEndTime)
         {
             float y = jumpYac.Evaluate(sumEvaluateTime / jumpTimeMultiply);
-            y *= jumpYMultiply; 
+            y *= jumpYMultiply * Time.deltaTime; 
             transform.Translate(0, y, 0);
             yield return null;
              
