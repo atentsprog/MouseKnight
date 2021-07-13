@@ -44,6 +44,8 @@ public class Player : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         spriteTr = GetComponentInChildren<SpriteRenderer>().transform;
         agent = GetComponent<NavMeshAgent>();
+        spriteTrailRenderer = GetComponentInChildren<SpriteTrailRenderer.SpriteTrailRenderer>();
+        spriteTrailRenderer.enabled = false;
     }
 
     void Update()
@@ -125,14 +127,11 @@ public class Player : MonoBehaviour
     public float hp = 100;
     internal void TakeHit(int damge)
     {
-        hp -= damge;
+        if (State == StateType.Death)
+            return;
 
-        if (hp > 0)
-        {
-            StartCoroutine(TakeHitCo());
-        }
-        else
-            StartCoroutine(DeathCo());//hp < 0 으면 죽자.
+        hp -= damge;
+        StartCoroutine(TakeHitCo());
     }
 
     public float takeHitTime = 0.3f;
@@ -140,7 +139,11 @@ public class Player : MonoBehaviour
     {
         State = StateType.TakeHit; //피격 모션하자.
         yield return new WaitForSeconds(takeHitTime);
-        State = StateType.Idle;
+
+        if (hp > 0)
+            State = StateType.Idle;
+        else
+            StartCoroutine(DeathCo());//hp < 0 으면 죽자.
     }
 
     public float deathTime = 0.5f;
@@ -150,7 +153,7 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(deathTime);
         Debug.LogWarning("게임 종료");
     }
-
+    SpriteTrailRenderer.SpriteTrailRenderer spriteTrailRenderer;
     [Foldout("대시")] public float dashSpeedMultiplySpeed = 4f;
     Vector3 dashDirection;
     private IEnumerator DashCo()
@@ -158,6 +161,7 @@ public class Player : MonoBehaviour
         //방향을 바꿀 수 없게끔, -> 진행방향으로 이동 -> 대각선 이동 대각선이동 -> 드래그방향으로 이동할건지
         //    플레이이어이동방향 x이동할 껀지
         //// dashDirection x방향만 사용.
+        spriteTrailRenderer.enabled = true;
         dashDirection = Input.mousePosition - mouseDownPosition;
         dashDirection.y = 0;
         dashDirection.z = 0;
@@ -167,6 +171,7 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(dashTime);
         speed = normalSpeed;
         State = StateType.Idle;
+        spriteTrailRenderer.enabled = false;
     }
 
     private bool IsSucceesDashDrag()

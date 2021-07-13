@@ -86,7 +86,8 @@ public class Goblin : MonoBehaviour
         animator.Play("Attack");
         yield return new WaitForSeconds(attackApplyTime);
         //실제 어택하자.
-        if (Vector3.Distance(player.transform.position, transform.position) < attackRange)
+        if (Vector3.Distance(player.transform.position
+            , transform.position) < attackRange)
         {
             //플레이어를 때리자.
             player.TakeHit(power);
