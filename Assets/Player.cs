@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
@@ -64,6 +65,7 @@ public class Player : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         spriteTr = GetComponentInChildren<SpriteRenderer>().transform;
         trailRenderer = GetComponentInChildren<SpriteTrailRenderer.SpriteTrailRenderer>();
+        agent = GetComponent<NavMeshAgent>();
         trailRenderer.enabled = false;
 
         normalSpeed = speed;
@@ -281,6 +283,7 @@ public class Player : MonoBehaviour
     public AnimationCurve jumpYac;
     public float jumpYMultiply = 1;
     public float jumpTimeMultiply = 1;
+    NavMeshAgent agent;
     private IEnumerator JumpCo()
     {
         jumpState = JumpStateType.Jump;
@@ -291,25 +294,37 @@ public class Player : MonoBehaviour
         float jumpEndTime = jumpStartTime + jumpDuration;
         float sumEvaluateTime = 0;
         float previousyHeight = 0;
+        agent.enabled = false;
+        
         while (Time.time < jumpEndTime)
         {
             float y = jumpYac.Evaluate(sumEvaluateTime / jumpTimeMultiply);
             y *= jumpYMultiply;
             transform.Translate(0, y, 0); // 여기서움직여도 navMeshAgent때문에 0으로 간다. 그러므로 누적된 높이가 적용되는게 아니라 매번 땅에서 부터의 높이 설정이 된다)
 
+            if (transform.position.y < 0)
+            {
+                var pos = transform.position;
+                pos.y = 0;
+                transform.position = pos;
+                break;
+            }
+
             if (State == StateType.JumpUp)
             {
-                if(previousyHeight > y)
+                if(previousyHeight > transform.position.y)
                 {
                     State = StateType.JumpDown;
                 }
                 else
-                    previousyHeight = y;
+                    previousyHeight = transform.position.y;
             }
             
             yield return null;
             sumEvaluateTime += Time.deltaTime;
         }
+        agent.enabled = true;
+
         jumpState = JumpStateType.Ground;
         State = StateType.Idle;
     }
