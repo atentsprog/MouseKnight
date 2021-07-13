@@ -199,12 +199,11 @@ public class Player : MonoBehaviour
             if (State == StateType.Idle)
                 movealbeDistance = walkDistance;
 
-            Vector3 dir = Vector3.zero;
+            Vector3 dir = hitPoint - transform.position;
+            dir.Normalize();
+
             if (distance > movealbeDistance)
             {
-                dir = hitPoint - transform.position;
-                dir.Normalize();
-
                 if (State == StateType.Dash)
                     dir = dashDirection;
 
