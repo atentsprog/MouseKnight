@@ -30,7 +30,8 @@ public class Player : MonoBehaviour, IReceiveMeleeAttackInfo, ITakeHit
         Attack3,
         DashMove,
         DashAttack,
-        TakeHit
+        TakeHit,
+        Death,
     }
 
     Animator animator;
@@ -43,6 +44,10 @@ public class Player : MonoBehaviour, IReceiveMeleeAttackInfo, ITakeHit
         {
             if (m_state == value)
                 return;
+
+            if (EditorOption.Options[OptionType.Player상태변화로그])
+                Debug.Log($"{m_state} -> {value}");
+
             m_state = value;
             animator.Play(m_state.ToString());
         }
@@ -418,7 +423,16 @@ public class Player : MonoBehaviour, IReceiveMeleeAttackInfo, ITakeHit
 
     private bool CanChangeWalkOrIdle()
     {
-        return jumpState != JumpStateType.Jump && State != StateType.DashMove;
+        if (jumpState == JumpStateType.Jump)
+            return false;
+        if (State == StateType.DashMove)
+            return false;
+        if (State == StateType.TakeHit)
+            return false;
+        if (State == StateType.Death)
+            return false;
+
+        return true;
     }
 
     private bool IsIngAttack()
@@ -430,24 +444,33 @@ public class Player : MonoBehaviour, IReceiveMeleeAttackInfo, ITakeHit
 
     public float hp = 100;
     public float MaxHp = 100;
-    public void OnDamge(float damage)
-    {
-        hpBar.fillAmount = hp / MaxHp;
-        State = StateType.TakeHit;
-        if (hp <= 0)
-        {
-            animator.Play("Death");
-            //게임 종료 확인창 표시하자.
-        }
-    }
+
 
     public void OnTriggerEnterFromChildCollider(Collider other)
     {
         other.GetComponent<ITakeHit>().OnTakeHit(currentAttack.damage);
     }
 
-    public void OnTakeHit(int damage)
+    public void OnTakeHit(float damage)
     {
-        OnDamge(damage);
+        hp -= damage;
+        hpBar.fillAmount = hp / MaxHp;
+        if (hp <= 0)
+        {
+            State = StateType.Death;
+            //게임 종료 확인창 표시하자.
+        }
+        else
+        {
+            StartCoroutine(TakeHitCo());
+        }
+    }
+
+    public float takeHitTime = 0.5f;
+    private IEnumerator TakeHitCo()
+    {
+        State = StateType.TakeHit;
+        yield return new WaitForSeconds(takeHitTime);
+        State = StateType.Idle;
     }
 }

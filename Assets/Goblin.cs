@@ -11,6 +11,7 @@ public class Goblin : MonoBehaviour, ITakeHit
     public float attackRange = 10;
     public float speed = 40;
     public float hp = 100;
+    public float power = 10;
     private float maxHp;
     private void OnDrawGizmos()
     {
@@ -22,11 +23,11 @@ public class Goblin : MonoBehaviour, ITakeHit
     }
     Image hpBar;
     Animator animator;
-    Transform target;
+    Player target;
     Coroutine fsmHandle;
     IEnumerator Start()
     {
-        target = Player.instance.transform;
+        target = Player.instance;
         animator = GetComponentInChildren<Animator>();
         originalSpeed = speed;
         animator.Play("Idle");
@@ -54,7 +55,7 @@ public class Goblin : MonoBehaviour, ITakeHit
 
     IEnumerator IdleCo()
     {
-        while (Vector3.Distance(target.position, transform.position) > watchRange)
+        while (Vector3.Distance(target.transform.position, transform.position) > watchRange)
             yield return null;
 
         Fsm = ChaseTargetFSM;
@@ -86,7 +87,7 @@ public class Goblin : MonoBehaviour, ITakeHit
         animator.Play("Run");
         while (fsmChange == false)
         {
-            Vector3 toPlayerDirection = transform.position - target.position;
+            Vector3 toPlayerDirection = transform.position - target.transform.position;
             toPlayerDirection.y = 0;
             toPlayerDirection.Normalize();
 
@@ -98,36 +99,32 @@ public class Goblin : MonoBehaviour, ITakeHit
             else
                 animator.transform.rotation = Quaternion.Euler(Vector3.zero);
             yield return null;
-            if (Vector3.Distance(transform.position, target.position) < attackRange)
+            if (Vector3.Distance(transform.position, target.transform.position) < attackRange)
             {
-                Fsm = AttackFsm;
+                Fsm = AttackFSM;
             }
         }
     }
     public float attackAnimationTime = 1;
     public float attackTime = 1;
-    IEnumerator AttackFsm()
+    public float preAttackAnimationTime = 0.4f;
+    IEnumerator AttackFSM()
     {
         animator.Play("Attack");
         //공격범위에 플레이어가 있다면 때린걸로 하자.
-        //스피어로 
-        yield return new WaitForSeconds(attackAnimationTime);
+        float attackAnimationEndTime = Time.time + attackAnimationTime;
+        yield return new WaitForSeconds(preAttackAnimationTime);
+        float playerDistance = Vector3.Distance(transform.position, target.transform.position);
+        if(playerDistance < attackRange)
+        {
+            //플레이어 공격 성공
+            target.OnTakeHit(power);
+        }
+        yield return new WaitForSeconds(attackAnimationEndTime - Time.time);
         Fsm = ChaseTargetFSM;
     }
-
-    public void OnDamage(int damage)
-    {
-        hp -= damage;
-        hpBar.fillAmount = hp / maxHp;
-
-        if(hp <= 0)
-            Fsm = OnDeath;
-        else
-            Fsm = OnAttacked;
-    }
-
     public float disappearTimeWhenDeath = 1;
-    private IEnumerator OnDeath()
+    private IEnumerator DeathFSM()
     {
         animator.Play("Death");
         yield return new WaitForSeconds(disappearTimeWhenDeath);
@@ -139,7 +136,7 @@ public class Goblin : MonoBehaviour, ITakeHit
     public float attackedTime = 0.7f;
     private float originalSpeed;
 
-    IEnumerator OnAttacked()
+    IEnumerator TakeHitFSM()
     {
         animator.Play("TakeHit");
         speed = 0;
@@ -149,8 +146,14 @@ public class Goblin : MonoBehaviour, ITakeHit
         Fsm = ChaseTargetFSM;
     }
 
-    public void OnTakeHit(int damage)
+    public void OnTakeHit(float damage)
     {
-        OnDamage(damage);
+        hp -= damage;
+        hpBar.fillAmount = hp / maxHp;
+
+        if (hp <= 0)
+            Fsm = DeathFSM;
+        else
+            Fsm = TakeHitFSM;
     }
 }

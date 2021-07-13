@@ -4,7 +4,7 @@ using UnityEngine;
 
 interface ITakeHit
 {
-    void OnTakeHit(int damage);
+    void OnTakeHit(float damage);
 }
 interface IReceiveMeleeAttackInfo
 {
