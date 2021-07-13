@@ -8,7 +8,6 @@ public class Goblin : MonoBehaviour
     // 추격 할대 플레이어한테 공격 가능한 거리면 공격.
     // 공격후 추격
     // 추격 공격
-
     Animator animator;
     IEnumerator Start()
     {
@@ -44,9 +43,21 @@ public class Goblin : MonoBehaviour
         animator.Play("Run");
         while (true)
         {
-            Vector3 toPlayerDirection = player.transform.position - transform.position;
+            Vector3 toPlayerDirection = player.transform.position
+                - transform.position;
             toPlayerDirection.Normalize();
-            transform.Translate(toPlayerDirection * speed * Time.deltaTime);
+            transform.Translate(toPlayerDirection * speed * Time.deltaTime, Space.World);
+
+            bool isRightSide = toPlayerDirection.x > 0;
+            if (isRightSide)
+            {
+                transform.rotation = Quaternion.Euler(Vector3.zero);
+            }
+            else
+            {
+                transform.rotation = Quaternion.Euler(0, 180, 0);
+            }
+
             yield return null;
         }
     }
