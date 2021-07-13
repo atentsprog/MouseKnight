@@ -5,8 +5,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IReceiveMeleeAttackInfo, ITakeHit
 {
     public static Player instance;
     private void Awake()
@@ -28,7 +29,8 @@ public class Player : MonoBehaviour
         Attack2,
         Attack3,
         DashMove,
-        DashAttack
+        DashAttack,
+        TakeHit
     }
 
     Animator animator;
@@ -60,8 +62,10 @@ public class Player : MonoBehaviour
     public float moveableStopDistance = 2;
     Plane plane = new Plane(new Vector3(0, 1, 0), 0);
 
+    Image hpBar;
     private void Start()
     {
+        hpBar = transform.Find("Canvas/HpBar").GetComponent<Image>();
         animator = GetComponentInChildren<Animator>();
         spriteTr = GetComponentInChildren<SpriteRenderer>().transform;
         trailRenderer = GetComponentInChildren<SpriteTrailRenderer.SpriteTrailRenderer>();
@@ -74,11 +78,11 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        //Test, 모든 몬스터 데미지 주기.
-        if(Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            FindObjectOfType<Goblin>().OnDamage(11);
-        }
+        ////Test, 모든 몬스터 데미지 주기.
+        //if(Input.GetKeyDown(KeyCode.Alpha1))
+        //{
+        //    FindObjectOfType<Goblin>().OnDamage(11);
+        //}
 
 
         Move();
@@ -251,20 +255,37 @@ public class Player : MonoBehaviour
     [Header("공격")]
     public List<AttackInfo> attackInfos;
     Dictionary<StateType, AttackInfo> attackInfoMap;
+    AttackInfo currentAttack;
     private IEnumerator AttackCo(AttackInfo currentAttack)
     {
+        this.currentAttack = currentAttack;
         State = currentAttack.attackState;
+        float attackEndAnimationTime = Time.time + currentAttack.duration;
         yield return new WaitForSeconds(currentAttack.attackTime); //공격 시작되는 시점.
-        //공격 범위에 있는 몬스터를 때리자. -> 어떻게 감지할 것인가? 
-        //공격 콜라이더 위치참조해서 충돌 감지 로직 돌리자.
+
+        // 방식 1) 트리거
+        //// 단점 1) 콜라이더 2개중 1곳에 RigidBody가 있어야 한다.
+        //// 단점 2) RigidBody가 움직여야 한다.
+        //// 단점 3) 즉시 적용할 수 없다. 콜라이더를 껐다가 최소 1프레임 대기후 다시 꺼야한다. 
+        //// 단점 4) 충돌체 Trriger체크 하고 Trigger를 감지할 수 있는 컴포넌트 추가해야한다.
+        //currentAttack.attackAreaCollider.enabled = true;
+        //yield return null;
+        //currentAttack.attackAreaCollider.enabled = false;
+
+
+        // 방식 2) 물리코드로 체크
+        //// 단점 1) 물리로 충돌영역 확인하는 로직 추가해야한다.
+        //// 장점) 트리거를 사용한 단점이 해결된다.
+        ////공격 범위에 있는 몬스터를 때리자. -> 어떻게 감지할 것인가? 
+        ////공격 콜라이더 위치참조해서 충돌 감지 로직 돌리자.
         SphereCollider sphereCollider = currentAttack.attackAreaCollider as SphereCollider;
         var enemyColliders = Physics.OverlapSphere(sphereCollider.transform.position, sphereCollider.radius, enemyLayer);
         foreach (var item in enemyColliders)
         {
-            item.GetComponent<Goblin>().OnDamage(currentAttack.damage);
+            item.GetComponent<ITakeHit>().OnTakeHit(currentAttack.damage);
         }
-
-        yield return new WaitForSeconds(currentAttack.duration - currentAttack.attackTime); // 공격이 끝날때까지 쉬자. 
+        float waitTime = attackEndAnimationTime - Time.time;
+        yield return new WaitForSeconds(waitTime); // 공격이 끝날때까지 쉬자. 
         State = StateType.Idle;
     }
     public LayerMask enemyLayer;
@@ -400,5 +421,28 @@ public class Player : MonoBehaviour
         return State == StateType.Attack1
             || State == StateType.Attack2
             || State == StateType.Attack3;
+    }
+
+    public float hp = 100;
+    public float MaxHp = 100;
+    public void OnDamge(float damage)
+    {
+        hpBar.fillAmount = hp / MaxHp;
+        State = StateType.TakeHit;
+        if (hp <= 0)
+        {
+            animator.Play("Death");
+            //게임 종료 확인창 표시하자.
+        }
+    }
+
+    public void OnTriggerEnterFromChildCollider(Collider other)
+    {
+        other.GetComponent<ITakeHit>().OnTakeHit(currentAttack.damage);
+    }
+
+    public void OnTakeHit(int damage)
+    {
+        OnDamge(damage);
     }
 }

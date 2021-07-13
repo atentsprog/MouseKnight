@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public class Goblin : MonoBehaviour
+public class Goblin : MonoBehaviour, ITakeHit
 {
     public float watchRange = 25;
     public float attackRange = 10;
@@ -38,7 +38,7 @@ public class Goblin : MonoBehaviour
         // 플레이어가 근접할때까지 대기
         fsm = IdleCo;
 
-        while (hp > 0)
+        while (true)
         {
             fsmChange = false;
             fsmHandle = StartCoroutine(fsm());
@@ -104,11 +104,14 @@ public class Goblin : MonoBehaviour
             }
         }
     }
+    public float attackAnimationTime = 1;
     public float attackTime = 1;
     IEnumerator AttackFsm()
     {
         animator.Play("Attack");
-        yield return new WaitForSeconds(attackTime);
+        //공격범위에 플레이어가 있다면 때린걸로 하자.
+        //스피어로 
+        yield return new WaitForSeconds(attackAnimationTime);
         Fsm = ChaseTargetFSM;
     }
 
@@ -116,8 +119,23 @@ public class Goblin : MonoBehaviour
     {
         hp -= damage;
         hpBar.fillAmount = hp / maxHp;
-        Fsm = OnAttacked;
+
+        if(hp <= 0)
+            Fsm = OnDeath;
+        else
+            Fsm = OnAttacked;
     }
+
+    public float disappearTimeWhenDeath = 1;
+    private IEnumerator OnDeath()
+    {
+        animator.Play("Death");
+        yield return new WaitForSeconds(disappearTimeWhenDeath);
+        //StageManager.instance.AddPoint(100);
+        //DotTween사용해서 투명해진 다음에 사라지게 하자.
+        Destroy(gameObject);
+    }
+
     public float attackedTime = 0.7f;
     private float originalSpeed;
 
@@ -129,5 +147,10 @@ public class Goblin : MonoBehaviour
 
         speed = originalSpeed;
         Fsm = ChaseTargetFSM;
+    }
+
+    public void OnTakeHit(int damage)
+    {
+        OnDamage(damage);
     }
 }
