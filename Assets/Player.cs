@@ -11,9 +11,9 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        m_state = StateType.NotInit;
     }
 
-    [SerializeField] StateType state = StateType.Idle;
     public float speed = 5;
     float normalSpeed;
     public float walkDistance = 12;
@@ -22,19 +22,20 @@ public class Player : MonoBehaviour
     public Transform spriteTr;
     Plane plane = new Plane( new Vector3( 0, 1, 0), 0);
 
+    [SerializeField] StateType m_state;
     StateType State
     {
-        get { return state; }
+        get { return m_state; }
         set
         {
-            if (state == value)
+            if (m_state == value)
                 return;
 
             if (EditorOption.Options[OptionType.Player상태변화로그])
-                Debug.Log($"state:{state} => value:{value}");
+                Debug.Log($"state:{m_state} => value:{value}");
 
-            state = value;
-            animator.Play(state.ToString());
+            m_state = value;
+            animator.Play(m_state.ToString());
         }
     }
     NavMeshAgent agent;
@@ -221,6 +222,7 @@ public class Player : MonoBehaviour
     }
     public enum StateType
     {
+        NotInit,
         Idle,
         Walk,
         JumpUp,
@@ -329,7 +331,7 @@ public class Player : MonoBehaviour
                 if (jumpState == JumpStateType.Jump)
                     return false;
 
-                if (state == StateType.Dash)
+                if (m_state == StateType.Dash)
                     return false;
 
                 return true;
