@@ -6,6 +6,12 @@ using DG.Tweening;
 
 public class Monster : MonoBehaviour
 {
+    public static List<Monster> Items = new List<Monster>();
+    private void Awake()
+    {
+        Items.Add(this);
+    }
+
     // 추격 할대 플레이어한테 공격 가능한 거리면 공격.
     // 공격후 추격
     // 추격 공격
@@ -148,6 +154,13 @@ public class Monster : MonoBehaviour
     private IEnumerator DeathFSM()
     {
         PlayAinmation("Death");
+
+        Items.Remove(this);
+        Debug.Log($"남은 몬스터 수 : {Items.Count}");
+        if (Items.Count == 0)
+        {
+            //StageResultUI.instance.Show();
+        }
         yield return new WaitForSeconds(deathTime);
 
         spriteRenderer.DOFade(0, 1).OnComplete(() => 
