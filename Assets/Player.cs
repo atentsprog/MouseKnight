@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
     float normalSpeed;
     public float walkDistance = 12;
     public float stopDistance = 7;
-    public Transform mousePointer;
+    //public Transform mousePointer;
     public Transform spriteTr;
     Plane plane = new Plane( new Vector3( 0, 1, 0), 0);
 
@@ -284,7 +284,7 @@ public class Player : MonoBehaviour
         if (plane.Raycast(ray, out float enter))
         {
             Vector3 hitPoint = ray.GetPoint(enter);
-            mousePointer.position = hitPoint;
+            //mousePointer.position = hitPoint;
             float distance = Vector3.Distance(hitPoint, transform.position);
 
             float movealbeDistance = stopDistance;

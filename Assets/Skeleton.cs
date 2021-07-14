@@ -10,7 +10,7 @@ public class Skeleton : Monster
     // 막고 있는 동안에는 데미지 없음(대신 막았다는 이펙트 생성)
     override protected void SelectAttackType()
     {
-        if(Random.Range(0, 1f) > 0.5f)
+        if (Random.Range(0, 1f) > 0.5f)
             CurrentFsm = AttackFSM;
         else
             CurrentFsm = ShieldFSM;

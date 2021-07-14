@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class HideCursorManager : MonoBehaviour
-{    void OnApplicationFocus(bool focus)
+{   
+    void OnApplicationFocus(bool focus)
     {
         ShowCursor(!focus);
     }

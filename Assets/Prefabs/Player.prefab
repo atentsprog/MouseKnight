@@ -317,12 +317,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60d97a6542f75e54ea82385113679245, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 1
   speed: 30
   walkDistance: 12
   stopDistance: 7
-  mousePointer: {fileID: 0}
   spriteTr: {fileID: 4140306179142381772}
+  m_state: 0
   attackTime: 0.5
   attackApplyTime: 0.2
   enemyLayer:
