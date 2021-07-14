@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        state = StateType.NotBegin;
     }
 
     [SerializeField] StateType state = StateType.Idle;
@@ -221,6 +222,7 @@ public class Player : MonoBehaviour
     }
     public enum StateType
     {
+        NotBegin,
         Idle,
         Walk,
         JumpUp,
