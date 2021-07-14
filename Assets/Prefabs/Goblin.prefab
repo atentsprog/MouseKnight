@@ -249,7 +249,7 @@ MonoBehaviour:
   attackRange: 10
   speed: 34
   attackTime: 1
-  attackApplyTime: 0.2
+  attackApplyTime: 0.55
   power: 10
   hp: 100
   takeHitTime: 0.3

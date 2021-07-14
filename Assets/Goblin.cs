@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Goblin : MonoBehaviour
 {
@@ -9,9 +10,12 @@ public class Goblin : MonoBehaviour
     // 공격후 추격
     // 추격 공격
     Animator animator;
+    SpriteRenderer spriteRenderer;
     IEnumerator Start()
     {
         animator = GetComponentInChildren<Animator>();
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
         player = Player.instance;
 
         CurrentFsm = IdleFSM;
@@ -140,6 +144,28 @@ public class Goblin : MonoBehaviour
     {
         PlayAinmation("Death");
         yield return new WaitForSeconds(deathTime);
-        Destroy(gameObject);
+
+        spriteRenderer.DOFade(0, 1).OnComplete(() => 
+            {
+                Destroy(gameObject);
+            });
+
+        //myAction = DestroySelf;
+
+        //myAction = () =>
+        //{
+        //    Destroy(gameObject);
+        //};
+
+        //myAction();
+
+        //spriteRenderer.DOFade(0, 1).OnComplete(DestroySelf);
     }
+
+    //void DestroySelf()
+    //{
+    //    Destroy(gameObject);
+    //}
+
+    //Action myAction;
 }
