@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class SceneProperty : MonoBehaviour
 {
+    public static SceneProperty instance;
     public int stageID;
     public enum SceneType
     {
@@ -15,7 +16,8 @@ public class SceneProperty : MonoBehaviour
 
     private void Awake()
     {
-        switch(sceneType)
+        instance = this;
+        switch (sceneType)
         {
             case SceneType.Stage: StageCanvasLoad(); break;
         }

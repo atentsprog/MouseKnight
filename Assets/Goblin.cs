@@ -9,6 +9,7 @@ public class Goblin : MonoBehaviour
     private void Awake()
     {
         Items.Add(this);
+        StageManager.instance.allMonsterCount++;
     }
     public int gainXp = 100;
     // 추격 할대 플레이어한테 공격 가능한 거리면 공격.
@@ -120,8 +121,10 @@ public class Goblin : MonoBehaviour
     public float hp = 100;
     internal void TakeHit(float damage)
     {
-        hp -= damage;        
-        StopCoroutine(fsmHandle);
+        StageManager.instance.damageTaken += damage;
+        hp -= damage;
+        if (fsmHandle != null)
+            StopCoroutine(fsmHandle);
         CurrentFsm = TakeHitFSM;
     }
 
