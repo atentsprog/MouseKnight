@@ -26,6 +26,7 @@ public class Goblin : MonoBehaviour
         while (true) // 상태를 무한히 반복해서 실행하는 부분.
         {
             fsmHandle = StartCoroutine(CurrentFsm());
+
             while (fsmHandle != null)
                 yield return null;
         }
@@ -69,7 +70,7 @@ public class Goblin : MonoBehaviour
     public float speed = 34;
     private IEnumerator ChaseFSM()
     {
-        animator.Play("Run");
+        PlayAnimation("Run");
         while (true)
         {
             Vector3 toPlayerDirection = player.transform.position
@@ -97,17 +98,24 @@ public class Goblin : MonoBehaviour
         }
     }
 
+    private void PlayAnimation(string clipName)
+    {
+        animator.Play(clipName, 0, 0);
+        Debug.Log(clipName);
+    }
+
     public float attackTime = 1;
     public float attackApplyTime = 0.2f;
     public int power = 10;
     private IEnumerator AttackFSM()
     {
-        animator.Play("Attack");
+        PlayAnimation("Attack");
         yield return new WaitForSeconds(attackApplyTime);
         //실제 어택하자.
         if (Vector3.Distance(player.transform.position
             , transform.position) < attackRange)
         {
+            Debug.Log("플레이어 피격 당함");
             //플레이어를 때리자.
             player.TakeHit(power);
 
