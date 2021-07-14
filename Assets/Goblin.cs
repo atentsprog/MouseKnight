@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class Goblin : MonoBehaviour
 {
+    public static List<Goblin> Items = new List<Goblin>();
+    private void Awake()
+    {
+        Items.Add(this);
+    }
+    public int gainXp = 100;
     // 추격 할대 플레이어한테 공격 가능한 거리면 공격.
     // 공격후 추격
     // 추격 공격
@@ -133,6 +139,9 @@ public class Goblin : MonoBehaviour
     private IEnumerator DeathFSM()
     {
         animator.Play("Death");
+
+        Items.Remove(this);
+        StageManager.instance.OnMonsterDie(this);
         yield return new WaitForSeconds(deathTime);
         Destroy(gameObject);
     }
