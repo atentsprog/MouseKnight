@@ -28,15 +28,46 @@ public class Skeleton : Monster
     }
 
     public GameObject succeedBlockEffect;
+    public Transform succeedBlockEffectPosition;
+
+    enum Direction
+    {
+        Right,
+        Left
+    }
     override public void TakeHit(float damage)
     {
-        if(isOnShield)
+        bool succeedBlock = SucceedBlock();
+        if (succeedBlock)
         {
-            Instantiate(succeedBlockEffect, transform.position, Quaternion.identity);
+            Instantiate(succeedBlockEffect, succeedBlockEffectPosition.position, Quaternion.identity);
         }
         else
         {
             base.TakeHit(damage);
         }
+    }
+
+    private bool SucceedBlock()
+    {
+        if (isOnShield == false)
+            return false;
+
+        // 180 스켈렉톤은 왼쪽, 0도일땐 오른쪽
+        Direction myDirection = transform.rotation.eulerAngles.y == 180 ? Direction.Left : Direction.Right;
+        if (myDirection == Direction.Right)
+        {
+            // 스켈렉톤이 오른쪽 보고 있을때 플레이어가 왼쪽에서공격 했다면 막기 실패.
+            if (player.transform.position.x - transform.position.x < 0)
+                return false;
+        }
+        else
+        {
+            // 스켈렉톤이  왼쪽 보고 있을때 플레이어가 오른 쪽에서공격 했다면 막기 실패.
+            if (transform.position.x  - player.transform.position.x < 0)
+                return false;
+        }
+
+        return true;
     }
 }

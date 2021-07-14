@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 34781531059340800}
   - component: {fileID: 34781531059340801}
-  - component: {fileID: 34781531059340806}
+  - component: {fileID: 4777938614903854062}
   m_Layer: 6
   m_Name: Sprite
   m_TagString: Untagged
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &34781531059340806
+--- !u!95 &4777938614903854062
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
@@ -93,7 +93,7 @@ Animator:
   m_GameObject: {fileID: 34781531059340807}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 625bd5fa768e8904ba49e96b2f472109, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -198,6 +198,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   originalY: 0
+--- !u!1 &2046056353384716272
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9011901384778829212}
+  m_Layer: 6
+  m_Name: BlockEffectPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9011901384778829212
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046056353384716272}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 8.4, y: 9.627, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 488262554423331936}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2882457591581068170
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,6 +260,7 @@ Transform:
   m_Children:
   - {fileID: 34781531059340800}
   - {fileID: 380174308780381485}
+  - {fileID: 9011901384778829212}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -290,3 +321,6 @@ MonoBehaviour:
   hp: 100
   takeHitTime: 0.3
   deathTime: 0.5
+  activeShieldTime: 2
+  succeedBlockEffect: {fileID: 7664287425192727411, guid: 4d4a1fb381cae6c4cb949de15f2c1a6b, type: 3}
+  succeedBlockEffectPosition: {fileID: 9011901384778829212}
