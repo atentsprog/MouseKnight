@@ -48,7 +48,7 @@ public class Goblin : MonoBehaviour
     private IEnumerator IdleFSM()
     {
         // 시작하면 Idle <- Idle 애니메이션 재생.
-        animator.Play("Idle");
+        PlayAinmation("Idle");
 
         ////IdleCo
         // 플레이어 근접하면 추격
@@ -62,7 +62,7 @@ public class Goblin : MonoBehaviour
     public float speed = 34;
     private IEnumerator ChaseFSM()
     {
-        animator.Play("Run");
+        PlayAinmation("Run");
         while (true)
         {
             Vector3 toPlayerDirection = player.transform.position
@@ -95,7 +95,7 @@ public class Goblin : MonoBehaviour
     public int power = 10;
     private IEnumerator AttackFSM()
     {
-        animator.Play("Attack");
+        PlayAinmation("Attack");
         yield return new WaitForSeconds(attackApplyTime);
         //실제 어택하자.
         if (Vector3.Distance(player.transform.position
@@ -111,6 +111,12 @@ public class Goblin : MonoBehaviour
         CurrentFsm = ChaseFSM;
     }
 
+    private void PlayAinmation(string clipName)
+    {
+        //Debug.Log(clipName);
+        animator.Play(clipName, 0, 0);
+    }
+
     public float hp = 100;
     internal void TakeHit(float damage)
     {
@@ -122,7 +128,7 @@ public class Goblin : MonoBehaviour
     public float takeHitTime = 0.3f;
     private IEnumerator TakeHitFSM()
     {
-        animator.Play("TakeHit");
+        PlayAinmation("TakeHit");
         yield return new WaitForSeconds(takeHitTime);
         if (hp > 0)
             CurrentFsm = IdleFSM;
@@ -132,7 +138,7 @@ public class Goblin : MonoBehaviour
     public float deathTime = 0.5f;
     private IEnumerator DeathFSM()
     {
-        animator.Play("Death");
+        PlayAinmation("Death");
         yield return new WaitForSeconds(deathTime);
         Destroy(gameObject);
     }
