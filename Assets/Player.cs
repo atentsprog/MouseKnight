@@ -104,7 +104,7 @@ public class Player : MonoBehaviour
             , attackCollider.radius, enemyLayer);
         foreach (var item in enemyColliders)
         {
-            item.GetComponent<Goblin>().TakeHit(power);
+            item.GetComponent<Monster>().TakeHit(power);
         }
 
         yield return new WaitForSeconds(attackTime);

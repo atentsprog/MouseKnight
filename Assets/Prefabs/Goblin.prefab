@@ -207,9 +207,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 252217736205931416}
-  - component: {fileID: 507878958}
   - component: {fileID: 507878960}
   - component: {fileID: 4485905890558090822}
+  - component: {fileID: 1226148867089674664}
   m_Layer: 6
   m_Name: Goblin
   m_TagString: Untagged
@@ -233,27 +233,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &507878958
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3262344927715906674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67c8863d29836564d88da321f183a53e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detectRange: 40
-  attackRange: 10
-  speed: 34
-  attackTime: 1
-  attackApplyTime: 0.55
-  power: 10
-  hp: 100
-  takeHitTime: 0.3
-  deathTime: 0.5
 --- !u!195 &507878960
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -290,3 +269,24 @@ CapsuleCollider:
   m_Height: 15.43
   m_Direction: 1
   m_Center: {x: 0, y: 4.1, z: 0}
+--- !u!114 &1226148867089674664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3262344927715906674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34c7f80a1a64dda488943de8453dc6f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectRange: 40
+  attackRange: 10
+  speed: 34
+  attackTime: 1
+  attackApplyTime: 0.55
+  power: 10
+  hp: 100
+  takeHitTime: 0.3
+  deathTime: 0.5
