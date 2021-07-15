@@ -4,10 +4,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class SingletonBase : MonoBehaviour
+public class HistoryUI: MonoBehaviour
 {
     static protected List<SingletonBase> MenuHistory = new List<SingletonBase>();
 
+    public static void ShowPreviousMenu(SingletonBase exceptUI = null)
+    {
+        if (exceptUI != null) // exceptUI는 제외 menuHistory에서 제거하자.
+            MenuHistory.RemoveAll(x => x == exceptUI);
+
+        int lastIndex = MenuHistory.Count - 1;
+        if (lastIndex == -1)
+        {
+            Debug.Log("보여줄 메뉴가 없다");
+            return;
+        }
+
+        var previousMenu = MenuHistory[lastIndex];
+        MenuHistory.RemoveAt(lastIndex);
+        previousMenu.Show();
+    }
+}
+
+public class SingletonBase : HistoryUI
+{
     public virtual int SortOrder => 0;
 
     public virtual string HierarchyPath 
@@ -29,23 +49,6 @@ public class SingletonBase : MonoBehaviour
     [HideInInspector]
     public bool completeUiInite = false;
     virtual public void ExecuteOneTimeInit() { }
-
-    public static void ShowPreviousMenu(SingletonBase exceptUI = null)
-    {
-        if (exceptUI != null) // exceptUI는 제외 menuHistory에서 제거하자.
-            MenuHistory.RemoveAll(x => x == exceptUI);
-
-        int lastIndex = MenuHistory.Count - 1;
-        if (lastIndex == -1)
-        {
-            Debug.Log("보여줄 메뉴가 없다");
-            return;
-        }
-
-        var previousMenu = MenuHistory[lastIndex];
-        MenuHistory.RemoveAt(lastIndex);
-        previousMenu.Show();
-    }
 }
 
 

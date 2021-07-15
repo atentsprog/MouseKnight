@@ -27,7 +27,7 @@ namespace UISample
             }
             if (Input.GetKeyDown(KeyCode.Alpha5))
             {
-                SingletonBase.ShowPreviousMenu();
+                HistoryUI.ShowPreviousMenu();
             }
         }
     }
