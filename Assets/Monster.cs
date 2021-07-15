@@ -154,6 +154,8 @@ public class Monster : MonoBehaviour
             CurrentFsm = DeathFSM;//hp < 0 으면 죽자.
     }
     public float deathTime = 0.5f;
+    internal int gainXp = 50;
+
     private IEnumerator DeathFSM()
     {
         PlayAinmation("Death");
