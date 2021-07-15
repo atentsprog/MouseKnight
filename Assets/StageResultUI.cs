@@ -12,16 +12,7 @@ public class StageResultUI : BaseUI<StageResultUI>
     Text damageTakenText;
     Button continueButton;
 
-    public void Show(int enemiesKilledCount, int sumMonserCount, int damageTakenPoint)
-    {
-        base.Show();
-
-        enemiesKilledText.text = $"{enemiesKilledCount} / {sumMonserCount}";
-        damageTakenText.text = damageTakenPoint.ToString();
-        gradeText.text = "A";
-    }
-
-    override protected void OnShow()
+    void Init()
     {
         gradeText = transform.Find("GradeText").GetComponent<Text>();
         enemiesKilledText = transform.Find("EnemiesKilledText").GetComponent<Text>();
@@ -29,14 +20,17 @@ public class StageResultUI : BaseUI<StageResultUI>
         continueButton = transform.Find("ContinueButton").GetComponent<Button>();
         continueButton.AddListener(this, LoadNextStage);
     }
+
     private void LoadNextStage()
     {
         Debug.LogWarning("LoadNextStage");
     }
 
-    /// Esc키 눌렀을때 실행될 함수
-    override public void Close()
+    override protected void OnShow()
     {
-        LoadNextStage();
+        Init();
+        enemiesKilledText.text = $"{StageManager.Instance.enemiesKilledCount} / {StageManager.Instance.sumMonserCount}";
+        damageTakenText.text = StageManager.Instance.damageTakenPoint.ToString();
+        gradeText.text = "A";
     }
 }

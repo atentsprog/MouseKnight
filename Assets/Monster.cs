@@ -145,14 +145,11 @@ public class Monster : MonoBehaviour
     public float hp = 100;
     virtual public void TakeHit(float damage)
     {
-        if (hp <= 0)
+        if (hp < 0)
             return;
 
-        hp -= damage;   
-
-        if(fsmHandle != null)
-            StopCoroutine(fsmHandle);
-
+        hp -= damage;        
+        StopCoroutine(fsmHandle);
         CurrentFsm = TakeHitFSM;
     }
 
@@ -177,7 +174,7 @@ public class Monster : MonoBehaviour
         Debug.Log($"남은 몬스터 수 : {Items.Count}");
         if (Items.Count == 0)
         {
-            StageResultUI.Instance.Show(StageManager.Instance.enemiesKilledCount, StageManager.Instance.sumMonserCount, StageManager.Instance.damageTakenPoint);
+            StageResultUI.Instance.Show();
         }
         yield return new WaitForSeconds(deathTime);
 
