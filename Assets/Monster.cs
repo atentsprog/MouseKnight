@@ -145,7 +145,7 @@ public class Monster : MonoBehaviour
     public float hp = 100;
     virtual public void TakeHit(float damage)
     {
-        if (hp < 0)
+        if (hp <= 0)
             return;
 
         hp -= damage;   
