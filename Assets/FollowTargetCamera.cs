@@ -15,7 +15,7 @@ public class FollowTargetCamera : MonoBehaviour
 
         float height = 2f * camera.orthographicSize;
         float width = height * camera.aspect;
-
+        target = Player.instance.transform;
         offset = target.position - transform.position;
         offset.x = 0;
         minX = width / 2 + moveableArea.transform.position.x + moveableArea.center.x - moveableArea.size.x / 2;

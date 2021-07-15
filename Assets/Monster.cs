@@ -19,6 +19,9 @@ public class Monster : MonoBehaviour
     SpriteRenderer spriteRenderer;
     IEnumerator Start()
     {
+        while (StageManager.instance.gameState != GameStateType.Playing)
+            yield return null;
+
         animator = GetComponentInChildren<Animator>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 

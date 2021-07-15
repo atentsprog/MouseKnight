@@ -51,6 +51,9 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (StageManager.instance.gameState != GameStateType.Playing)
+            return;
+
         if (CanMoveState())
         {
             Move();
