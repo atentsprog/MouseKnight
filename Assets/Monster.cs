@@ -28,7 +28,14 @@ public class Monster : MonoBehaviour
 
         while (true) // 상태를 무한히 반복해서 실행하는 부분.
         {
+            var previousFSM = CurrentFsm;
+         
             fsmHandle = StartCoroutine(CurrentFsm());
+          
+            // FSM 안에서 에러 발생시 무한 루프 도는 것을 방지 하기 위해서 추가함.
+            if (fsmHandle == null && previousFSM == CurrentFsm)
+                yield return null;
+
             while (fsmHandle != null)
                 yield return null;
         }
@@ -37,7 +44,8 @@ public class Monster : MonoBehaviour
     protected Func<IEnumerator> CurrentFsm
     {
         get { return m_currentFsm; }
-        set { 
+        set
+        {
             m_currentFsm = value;
             fsmHandle = null;
         }
@@ -138,7 +146,7 @@ public class Monster : MonoBehaviour
         if (hp < 0)
             return;
 
-        hp -= damage;        
+        hp -= damage;
         StopCoroutine(fsmHandle);
         CurrentFsm = TakeHitFSM;
     }
@@ -164,14 +172,17 @@ public class Monster : MonoBehaviour
         Debug.Log($"남은 몬스터 수 : {Items.Count}");
         if (Items.Count == 0)
         {
-            //StageResultUI.instance.Show();
+            StageManager.instance.OnMonsterDie(this);
         }
         yield return new WaitForSeconds(deathTime);
 
-        spriteRenderer.DOFade(0, 1).OnComplete(() => 
+        spriteRenderer.DOFade(0, 1).OnComplete(() =>
             {
                 Destroy(gameObject);
             });
+
+        // 다시 DeathFSM 시작하는 것을 방지하기 위해서 100초 쉬게함.쉬는 도중 위에 있는 파괴로직 실행될 예정
+        yield return new WaitForSeconds(100);
 
         //myAction = DestroySelf;
 
