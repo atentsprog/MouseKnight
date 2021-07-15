@@ -19,7 +19,7 @@ public class Monster : MonoBehaviour
     SpriteRenderer spriteRenderer;
     IEnumerator Start()
     {
-        while (StageManager.instance.gameState != GameStateType.Playing)
+        while (StageManager.Instance.gameState != GameStateType.Playing)
             yield return null;
 
         animator = GetComponentInChildren<Animator>();
@@ -169,10 +169,12 @@ public class Monster : MonoBehaviour
         PlayAinmation("Death");
 
         Items.Remove(this);
+        StageManager.Instance.enemiesKilledCount++;
+
         Debug.Log($"남은 몬스터 수 : {Items.Count}");
         if (Items.Count == 0)
         {
-            //StageResultUI.instance.Show();
+            StageResultUI.Instance.Show();
         }
         yield return new WaitForSeconds(deathTime);
 

@@ -2,6 +2,7 @@
 using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -20,14 +21,30 @@ public enum GameStateType
     Playing,
     StageEnd,
 }
-public class StageManager : MonoBehaviour
+public class StageManager : SingletonMonoBehavior<StageManager>
 {
-    public static StageManager instance;
     public GameStateType gameState = GameStateType.Ready;
-    private void Awake()
+
+    public int sumMonserCount;
+    public int enemiesKilledCount;
+    public int damageTakenPoint;
+
+
+    new private void Awake()
     {
-        instance = this;
+        base.Awake();
         gameState = GameStateType.Ready;
+
+        List<SpawnPoint> allSpawnPoints = new List<SpawnPoint>(FindObjectsOfType<SpawnPoint>());
+        sumMonserCount = allSpawnPoints.Where(x => x.spawnType != SpawnType.Player).Count();
+
+        //var allsp = FindObjectsOfType<SpawnPoint>();
+        //int sumCount = 0;
+        //foreach (var item in allsp)
+        //{
+        //    if (item.spawnType != SpawnType.Player)
+        //        sumCount++;
+        //}
     }
 
     public Ease inEaseType = Ease.InElastic;
@@ -42,6 +59,7 @@ public class StageManager : MonoBehaviour
         blackScreen.alpha = 1; // 0: 안보임, 1 : 보임, 1 -> 블랙 스크린을 보이게 하자
         blackScreen.DOFade(0, 1.7f);
         yield return new WaitForSeconds(1.7f);
+
 
         // 스테이지 이름 표시하자.
         StageInfo stageInfo = GameData.StageInfoMap[SceneProperty.instance.StageID];
