@@ -24,9 +24,12 @@ public class StageManager : MonoBehaviour
 
     private void Start()
     {
-        blackScreen = GameObject.Find("StageCanvas").transform.Find("BlackScreen").GetComponent<CanvasGroup>();
+        blackScreen = GameObject.Find("PersistCanvas").transform.Find("BlackScreen").GetComponent<CanvasGroup>();
         xpPointText = GameObject.Find("StageCanvas").transform.Find("TopRight/XpPoint/XpPointText").GetComponent<Text>();
         xpPointText.text = "0";
+
+        blackScreen.alpha = 1;
+        blackScreen.DOFade(0, 1);
     }
 
     internal void OnMonsterDie(Monster dieMonster)

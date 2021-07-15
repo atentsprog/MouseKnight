@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IInit
 {
     public static Player instance;
     private void Awake()
@@ -147,6 +147,7 @@ public class Player : MonoBehaviour
             return;
 
         hp -= damge;
+        StageManager.instance.damageTaken += hp;
         StartCoroutine(TakeHitCo());
     }
 
@@ -337,5 +338,10 @@ public class Player : MonoBehaviour
                 return true;
             }
         }
+    }
+
+    public void InitInstance()
+    {
+        print(name);
     }
 }

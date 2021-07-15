@@ -329,7 +329,7 @@ MonoBehaviour:
     m_Bits: 64
   attackCollider: {fileID: 8466875748288778906}
   power: 10
-  dashableDistance: 10
+  dashableDistance: 40
   dashableTime: 0.4
   dashTime: 0.3
   hp: 100

@@ -962,7 +962,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3706f94b097864449af604a1878c97b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageID: 1
+  stageID: 2
   sceneType: 0
 --- !u!4 &1832919250
 Transform:
@@ -1285,7 +1285,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2882457591581068170, guid: d5fc0742eb23f7b46850bc3770d0e9d5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5fc0742eb23f7b46850bc3770d0e9d5, type: 3}

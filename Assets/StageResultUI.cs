@@ -4,10 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-interface IInit
-{
-    void InitInstance();
-}
 public class StageResultUI : MonoBehaviour, IInit
 {
     public static StageResultUI instance;
@@ -19,20 +15,17 @@ public class StageResultUI : MonoBehaviour, IInit
     public void InitInstance()
     {
         instance = this;
-    }
 
-    void Start()
-    {
-        Button continueButton = transform.Find("ContinueButton").GetComponent<Button>();
+        Button continueButton = transform.Find("UI/ContinueButton").GetComponent<Button>();
         continueButton.AddListener(this, LoadNextStage);
-        gradeText = transform.Find("GradeText").GetComponent<Text>();
-        enemiesKilledText = transform.Find("EnemiesKilledText").GetComponent<Text>();
-        damageTakenText = transform.Find("DamgeTakenText").GetComponent<Text>();
-
+        gradeText = transform.Find("UI/GradeText").GetComponent<Text>();
+        enemiesKilledText = transform.Find("UI/EnemiesKilledText").GetComponent<Text>();
+        damageTakenText = transform.Find("UI/DamageTakenText").GetComponent<Text>();
     }
+
     private void LoadNextStage()
     {
-        string nextStageName = "Stage" + SceneProperty.instance.stageID + 1;
+        string nextStageName = "Stage" + (SceneProperty.instance.stageID + 1);
         UnityEngine.SceneManagement.SceneManager.LoadScene(nextStageName);
     }
 

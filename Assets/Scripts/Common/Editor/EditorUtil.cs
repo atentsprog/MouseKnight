@@ -38,8 +38,6 @@ public class EditorUtil
         {
             // 변경된 씬이 없거나, 저장(Save)했거나 저장하지 않았을때(Don't Save) 실행된다
             // 취소했을때는 실행되지 않는다.
-            Debug.Log(1);
-
             //소스트리 실행하자.
             System.Diagnostics.Process.Start(filePath, $" -f \"{projectPath}\" status");
         }

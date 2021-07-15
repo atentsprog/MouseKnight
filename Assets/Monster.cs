@@ -10,6 +10,7 @@ public class Monster : MonoBehaviour
     private void Awake()
     {
         Items.Add(this);
+        StageManager.instance.allMonsterCount++;
     }
 
     // 추격 할대 플레이어한테 공격 가능한 거리면 공격.

@@ -14,7 +14,7 @@ public class EditorSceneLoad
     }
 
 
-    [MenuItem("Window/2. Stage1 Scene Load")]
+    [MenuItem("Window/W. Stage1 Scene Load")]
     private static void Stage1SceneLoad()
     {
         LoadScene("Stage1");
