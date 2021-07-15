@@ -35,7 +35,7 @@ public class StageManager : SingletonMonoBehavior<StageManager>
         base.Awake();
         gameState = GameStateType.Ready;
 
-        List<SpawnPoint> allSpawnPoints = new List<SpawnPoint>(FindObjectsOfType<SpawnPoint>());
+        List<SpawnPoint> allSpawnPoints = new List<SpawnPoint>(FindObjectsOfType<SpawnPoint>(true));
         sumMonserCount = allSpawnPoints.Where(x => x.spawnType != SpawnType.Player).Count();
 
         //var allsp = FindObjectsOfType<SpawnPoint>();
