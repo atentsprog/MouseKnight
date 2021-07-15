@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aac1bb65dd624e8499da23bc9762c9a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameState: 0
 --- !u!4 &26647784
 Transform:
   m_ObjectHideFlags: 0
@@ -423,7 +424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3176069780e2407429855d92734f699f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StageID: -1
+  StageID: 1
   sceneType: 0
 --- !u!4 &422072118
 Transform:
@@ -1635,3 +1636,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c7984f3ad4645348ad21d233ef88813, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stageNameText: {fileID: 0}

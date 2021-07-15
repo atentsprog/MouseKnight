@@ -38,8 +38,9 @@ public class StageManager : MonoBehaviour
         yield return new WaitForSeconds(1.7f);
 
         // 스테이지 이름 표시하자.
-        string stageName = "Stage " + SceneProperty.instance.StageID;
-
+        StageInfo stageInfo = GameData.StageInfoMap[SceneProperty.instance.StageID];
+        string stageName = stageInfo.titleString;
+            
         // 2 초 쉬었다가
         StageCanvas.instance.stageNameText.text = stageName;
 
