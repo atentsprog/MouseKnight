@@ -29,6 +29,23 @@ public class SingletonBase : MonoBehaviour
     [HideInInspector]
     public bool completeUiInite = false;
     virtual public void ExecuteOneTimeInit() { }
+
+    public static void ShowPreviousMenu(SingletonBase exceptUI = null)
+    {
+        if (exceptUI != null) // exceptUI는 제외 menuHistory에서 제거하자.
+            MenuHistory.RemoveAll(x => x == exceptUI);
+
+        int lastIndex = MenuHistory.Count - 1;
+        if (lastIndex == -1)
+        {
+            Debug.Log("보여줄 메뉴가 없다");
+            return;
+        }
+
+        var previousMenu = MenuHistory[lastIndex];
+        MenuHistory.RemoveAt(lastIndex);
+        previousMenu.Show();
+    }
 }
 
 
@@ -53,8 +70,6 @@ where T : SingletonBase
     protected void OnEnable()
     {
         UIStackManager.PushUiStack(transform, CloseCallback);
-
-        AddHistory();
     }
 
 
@@ -70,26 +85,11 @@ where T : SingletonBase
         base.OnDisable();
 
         UIStackManager.PopUiStack(CacheGameObject.GetInstanceID());
+
+        AddHistory();
     }
 
     private readonly int MaxHistoryCount = 5;
-
-    protected void ShowPreviousMenu(BaseUI<T> exceptUI = null)
-    {
-        if (exceptUI != null) // exceptUI는 제외 menuHistory에서 제거하자.
-            MenuHistory.RemoveAll(x => x == exceptUI);
-
-        int lastIndex = MenuHistory.Count - 1;
-        if (lastIndex == -1)
-        {
-            Debug.Log("보여줄 메뉴가 없다");
-            return;
-        }
-
-        var previousMenu = MenuHistory[lastIndex];
-        MenuHistory.RemoveAt(lastIndex);
-        previousMenu.Show();
-    }
 }
 
 /// <summary>
