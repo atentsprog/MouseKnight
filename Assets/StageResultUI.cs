@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class StageResultUI : BaseUI<StageResultUI>
 {
+    public override string HierarchyPath => "StageCanvas/StageResultUI";
     Text gradeText;
     Text enemiesKilledText;
     Text damageTakenText;
