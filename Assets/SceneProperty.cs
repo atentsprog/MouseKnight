@@ -11,6 +11,9 @@ public class SceneProperty : MonoBehaviour
 
         if (PersistCanvas.instance == null)
             Instantiate(Resources.Load("PersistCanvas"));
+
+        if (GameData.instance == null)
+            Instantiate(Resources.Load("GameData"));
     }
 
     //private void OnDestroy()
