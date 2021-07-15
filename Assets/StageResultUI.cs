@@ -33,4 +33,10 @@ public class StageResultUI : BaseUI<StageResultUI>
     {
         Debug.LogWarning("LoadNextStage");
     }
+
+    /// Esc키 눌렀을때 실행될 함수
+    override public void Close()
+    {
+        LoadNextStage();
+    }
 }
