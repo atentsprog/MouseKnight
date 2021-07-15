@@ -51,15 +51,29 @@ public class Player : MonoBehaviour, IInit
 
     void Update()
     {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        plane.Raycast(ray, out float enter);
+        Vector3 hitPoint = ray.GetPoint(enter);
+
+        UpdateDirectionUI(hitPoint);
+
+
         if (CanMoveState())
         {
-            Move();
+            Move(hitPoint);
             Jump();
         }
 
         bool isSucceedDash = Dash();
 
         Attack(isSucceedDash);
+    } 
+    public Transform directionBasePoint;
+    private void UpdateDirectionUI(Vector3 hitPoint)
+    {
+        Vector3 dir = hitPoint  - directionBasePoint.position;
+        float zAngle = 360 - Quaternion.FromToRotation(new Vector3(0, 0, 1), dir.normalized).eulerAngles.y;
+        PlayerDirectionUI.instance.SetDirection(zAngle);
     }
 
     private bool CanMoveState()
@@ -275,16 +289,16 @@ public class Player : MonoBehaviour, IInit
         State = StateType.Idle;
     }
 
-    private void Move()
+    private void Move(Vector3 hitPoint)
     {
         if (Time.timeScale == 0)
             return;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (plane.Raycast(ray, out float enter))
+        //if (plane.Raycast(ray, out float enter))
         {
-            Vector3 hitPoint = ray.GetPoint(enter);
+            //    Vector3 hitPoint = ray.GetPoint(enter);
             //mousePointer.position = hitPoint;
             float distance = Vector3.Distance(hitPoint, transform.position);
 
