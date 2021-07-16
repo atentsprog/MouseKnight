@@ -177,7 +177,10 @@ public class Monster : MonoBehaviour
         Debug.Log($"남은 몬스터 수 : {Items.Count}");
         if (Items.Count == 0)
         {
-            StageResultUI.Instance.Show(StageManager.Instance.enemiesKilledCount, StageManager.Instance.sumMonserCount, StageManager.Instance.damageTakenPoint);
+            StageResultUI.Instance.Show(
+                StageManager.Instance.enemiesKilledCount
+                , StageManager.Instance.sumMonserCount
+                , StageManager.Instance.damageTakenPoint);
         }
         yield return new WaitForSeconds(deathTime);
 

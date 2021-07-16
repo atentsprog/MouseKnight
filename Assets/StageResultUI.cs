@@ -7,12 +7,13 @@ using UnityEngine.UI;
 public class StageResultUI : BaseUI<StageResultUI>
 {
     public override string HierarchyPath => "StageCanvas/StageResultUI";
+
     Text gradeText;
     Text enemiesKilledText;
     Text damageTakenText;
     Button continueButton;
 
-    void Init()
+    override protected void OnInit()
     {
         gradeText = transform.Find("GradeText").GetComponent<Text>();
         enemiesKilledText = transform.Find("EnemiesKilledText").GetComponent<Text>();
@@ -26,11 +27,13 @@ public class StageResultUI : BaseUI<StageResultUI>
         Debug.LogWarning("LoadNextStage");
     }
 
-    override protected void OnShow()
+    internal void Show(int enemiesKilledCount, int sumMonserCount
+        , int damageTakenPoint)
     {
-        Init();
-        enemiesKilledText.text = $"{StageManager.Instance.enemiesKilledCount} / {StageManager.Instance.sumMonserCount}";
-        damageTakenText.text = StageManager.Instance.damageTakenPoint.ToString();
+        base.Show(); // 원칙, 
+
+        enemiesKilledText.text = $"{enemiesKilledCount} / {sumMonserCount}";
+        damageTakenText.text = damageTakenPoint.ToString();
         gradeText.text = "A";
     }
 }

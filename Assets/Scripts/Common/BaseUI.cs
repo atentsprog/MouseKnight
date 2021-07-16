@@ -95,7 +95,7 @@ where T : SingletonBase
 /// <summary>
 /// 싱글턴, 동적 로드 가능
 /// OnInit : 1회성 초기화시 사용
-/// Show : 나타나게 할때 호출한다
+/// Show : 나타나게 할때 호출한다 <- 없앨 예정.
 /// Close : 사라지게 할때 호출한다
 /// OnShow : 나타날때 호출된다
 /// 
@@ -398,7 +398,7 @@ where T : SingletonBase
     }
 
     /// <summary>
-    /// 명확히 끄는 함수, gameObject.SetActive(false)는 UI를 끄는건지 잠시 비활성화하는 건지 알 수 없다. 그래서 명확하게 하기 위해서 Close함수를 호출해서 끌때 처리해야하는 로직을 실행하자(켤때도 마찬가지 Show강제 사용)
+    /// 명확히 끄는 함수, gameObject.SetActive(false)는 UI를 끄는건지 잠시 비활성화하는 건지 알 수 없다. 그래서 명확하게 하기 위해서 Close함수를 호출해서 끌때 처리해야하는 로직을 실행하자
     /// ESC눌렀을때도 호출된다.
     /// </summary>
     virtual public void Close()
