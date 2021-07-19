@@ -17,11 +17,9 @@ public class FixYPotionInEditMode : MonoBehaviour
         transform.position = pos;
     }
 
-
-    public SpawnType spawnType;
     private void OnDrawGizmos()
     {
-        spawnType = GetComponent<SpawnPoint>().spawnType;
+        SpawnType spawnType = GetComponent<SpawnPoint>().spawnType;
 
         string iconName;
         switch (spawnType)
