@@ -1597,6 +1597,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6824013945596359358, guid: af2b28b6c294aa4468ba3d53a0163cb8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9197915492094609664, guid: af2b28b6c294aa4468ba3d53a0163cb8, type: 3}
       propertyPath: m_Name
       value: StageCanvas
@@ -1689,5 +1693,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9197915492138565393, guid: af2b28b6c294aa4468ba3d53a0163cb8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af2b28b6c294aa4468ba3d53a0163cb8, type: 3}
+--- !u!1 &9197915491491815466 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9197915492138565393, guid: af2b28b6c294aa4468ba3d53a0163cb8, type: 3}
+  m_PrefabInstance: {fileID: 9197915491491815465}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &9197915491491815467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9197915491491815466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e2a337bd410c5744b24dd95b14ff506, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  completeUiInite: 0
