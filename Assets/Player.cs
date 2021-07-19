@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     {
         instance = this;
         m_state = StateType.NotInit;
+        MaxHP = hp;
     }
 
     public float speed = 5;
@@ -144,6 +145,7 @@ public class Player : MonoBehaviour
     [Foldout("대시")] public float dashTime = 0.3f;
 
     public float hp = 100;
+    public float MaxHP;
     internal void TakeHit(int damge)
     {
         if (State == StateType.Death)
@@ -151,6 +153,7 @@ public class Player : MonoBehaviour
 
         StageManager.Instance.damageTakenPoint += damge;
         hp -= damge;
+        PlayerStateUI.Instance.UpdateHp(hp, MaxHP);
         StartCoroutine(TakeHitCo());
     }
 
